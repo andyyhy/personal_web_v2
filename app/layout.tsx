@@ -33,13 +33,17 @@ export default function RootLayout({
         <div className="w-full border-b border-zinc-800">
           <div className="max-w-4xl w-full mx-auto p-2 sm:p-4 md:p-6 flex flex-row justify-between items-center">
             <div className="flex items-center space-x-4">
-              <Image src="/ay.png" alt="Logo" className="h-12 w-12" width={100} height={100} />
-              <span className="hidden sm:block text-xl font-bold">Andy Yang</span>
+              <Link href="/" passHref>
+                  <Image src="/ay.png" alt="Logo" className="h-12 w-12" width={100} height={100} />
+              </Link>
+              <Link href="/" passHref>
+                <span className="hidden sm:block text-xl font-bold">Andy Yang</span>
+              </Link>
             </div>
             <NavigationMenu className="flex justify-center items-center w-full">
               <NavigationMenuList className="flex space-x-4 md:space-x-8">
                 <NavigationMenuItem>
-                  <Link href="/docs" legacyBehavior passHref>
+                  <Link href="/about" legacyBehavior passHref>
                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                       About Me
                     </NavigationMenuLink>
