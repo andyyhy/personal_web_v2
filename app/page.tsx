@@ -7,10 +7,10 @@ export default function Home() {
         <main className="flex flex-col-reverse md:flex-row items-start md:items-center mb-8 sm:mb-10 md:mb-12">
           <div className="md:w-2/3 md:pr-6">
             <h1 className="scroll-m-20 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl">
-              Hey! I'm Andy Yang
+              Hey! I&apos;m Andy Yang
             </h1>
             <p className="leading-7 mt-4 sm:mt-6">
-              I'm a Masters student at Umich studying Computer Science and sometimes I am a Software Engineer.
+              I&apos;m a Masters student at Umich studying Computer Science and sometimes I am a Software Engineer.
             </p>
             <p className="leading-7 mt-4 sm:mt-6">
               On this site, you can check out projects I have worked on and cool stuff I have done for fun.

@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -32,7 +33,7 @@ export default function RootLayout({
         <div className="w-full border-b border-zinc-800">
           <div className="max-w-4xl w-full mx-auto p-2 sm:p-4 md:p-6 flex flex-row justify-between items-center">
             <div className="flex items-center space-x-4">
-              <img src="ay.png" alt="Logo" className="h-12 w-12" />
+              <Image src="/ay.png" alt="Logo" className="h-12 w-12" width={100} height={100} />
               <span className="hidden sm:block text-xl font-bold">Andy Yang</span>
             </div>
             <NavigationMenu className="flex justify-center items-center w-full">
