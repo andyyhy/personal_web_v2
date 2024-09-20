@@ -17,15 +17,19 @@ export default function Home() {
             </p>
           </div>
           <div className="mt-6 md:mt-0 md:ml-12 md:w-1/3 flex justify-start md:justify-center">
-            <img
+            <Image
               className="block md:hidden h-auto w-36 mb-10 rounded-full shadow-xl dark:shadow-gray-800"
               src="/me-small.jpeg"
               alt="Andy Yang"
+              width={200}
+              height={200}
             />
-            <img
+            <Image
               className="hidden md:block h-auto max-w-xs rounded-lg shadow-xl dark:shadow-gray-800"
               src="/me1.jpeg"
               alt="Andy Yang"
+              width={400}
+              height={400}
             />
           </div>
         </main>
