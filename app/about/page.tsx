@@ -1,4 +1,3 @@
-import Image from "next/image";
 
 export default function About() {
   return (
@@ -10,7 +9,7 @@ export default function About() {
             About Me
           </h1>
           <p className="leading-7 mt-4 sm:mt-6">
-            Hi, I'm Andy Yang, a passionate software developer with a love for creating innovative solutions. I am currently pursuing my Masters in Computer Science at the University of Michigan.
+            Hi, I&apos;m Andy Yang, a passionate software developer with a love for creating innovative solutions. I am currently pursuing my Masters in Computer Science at the University of Michigan.
           </p>
           <p className="leading-7 mt-4 sm:mt-6">
             I have a strong background in software engineering and have worked on various projects that span different domains. I enjoy exploring new technologies and continuously improving my skills.
@@ -23,7 +22,7 @@ export default function About() {
         {/* What I'm Doing Now Section */}
         <section className="mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl">
-            What I'm Doing Now
+            What I&apos;m Doing Now
           </h2>
           <p className="leading-7 mt-4 sm:mt-6">
             Currently, I am focused on completing my Masters in Computer Science at the University of Michigan. I am also working on several personal projects and contributing to open-source communities.
@@ -57,7 +56,7 @@ export default function About() {
           </h2>
           <ul className="list-disc list-inside leading-7 mt-4 sm:mt-6">
             <li>2023: Started my Masters in Computer Science at the University of Michigan</li>
-            <li>2021: Graduated with a Bachelor's degree in Computer Science</li>
+            <li>2021: Graduated with a Bachelor&apos;s degree in Computer Science</li>
             <li>2020: Interned at XYZ Company as a Software Engineer</li>
             <li>2019: Started contributing to open-source projects</li>
             <li>2018: Developed my first web application</li>
