@@ -18,8 +18,9 @@ export default function About() {
         {/* What I'm Doing Now Section */}
         <section className="mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl">
-            What I&apos;m Doing Now <span className="text-lg font-normal">(Updated: September 2024)</span>
+            What I&apos;m Doing Now
           </h2>
+          <span className="text-lg font-normal">(Updated: September 2024)</span>
           <ul className="list-disc list-inside leading-7 mt-4 sm:mt-6">
             <li>Completing my Master&apos;s in Computer Science at the University of Michigan</li>
             <li>Recruiting for fulltime software engineering roles</li>
@@ -74,11 +75,19 @@ export default function About() {
           <p className="leading-7 mt-4 sm:mt-6">
             Feel free to reach out to me through the following channels:
           </p>
-          <ul className="list-disc list-inside leading-7 mt-4 sm:mt-6">
-            <li>Email: <a href="mailto:andyyhyang@gmail.com" className="text-pink-600">andyyhyang@gmail.com</a></li>
-            <li>LinkedIn: <a href="https://www.linkedin.com/in/andyyhy" className="text-pink-600">linkedin.com/in/andyyhy</a></li>
-            <li>Instagram: <a href="https://www.instagram.com/andyyhy02/" className="text-pink-600">https://www.instagram.com/andyyhy02/</a></li>
-            <li>GitHub: <a href="https://github.com/andyyhy" className="text-pink-600">github.com/andyyhy</a></li>
+          <ul className="list-disc list-outside leading-7 mt-4 sm:mt-6 pl-5">
+            <li className="mb-2">
+              Email: <a href="mailto:andyyhyang@gmail.com" className="text-pink-600">andyyhyang@gmail.com</a>
+            </li>
+            <li className="mb-2">
+              LinkedIn: <a href="https://www.linkedin.com/in/andyyhy" className="text-pink-600">linkedin.com/in/andyyhy</a>
+            </li>
+            <li className="mb-2">
+              Instagram: <a href="https://www.instagram.com/andyyhy02/" className="text-pink-600">https://www.instagram.com/andyyhy02/</a>
+            </li>
+            <li className="mb-2">
+              GitHub: <a href="https://github.com/andyyhy" className="text-pink-600">github.com/andyyhy</a>
+            </li>
           </ul>
         </section>
       </div>
