@@ -10,10 +10,10 @@ export default function Home() {
               Hey! I&apos;m Andy Yang
             </h1>
             <p className="leading-7 mt-4 sm:mt-6">
-              I&apos;m a Masters student at Umich studying Computer Science and sometimes I am a Software Engineer.
+              I&apos;m a Master&apos;s student at the <a href="https://cse.engin.umich.edu" className="text-[#FFCB05] hover:underline">University of Michigan</a> studying Computer Science and Engineering. I enjoy creating digital experiences and solving everyday problems through innovative software solutions.
             </p>
             <p className="leading-7 mt-4 sm:mt-6">
-              On this site, you can learn a little bit about me, check out projects I have worked on, and cool stuff I have done for fun.
+              On this site, you can learn a little bit <a href="/about" className="text-pink-600 hover:underline">about me</a>, check out <a href="/projects" className="text-pink-600 hover:underline">projects</a> I have worked on, and <a href="/cool" className="text-pink-600 hover:underline">cool stuff</a> I have done for fun.
             </p>
           </div>
           <div className="mt-6 md:mt-0 md:ml-12 md:w-1/3 flex justify-start md:justify-center">
