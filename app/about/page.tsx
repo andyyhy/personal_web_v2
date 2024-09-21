@@ -1,4 +1,3 @@
-
 export default function About() {
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8">
@@ -9,43 +8,42 @@ export default function About() {
             About Me
           </h1>
           <p className="leading-7 mt-4 sm:mt-6">
-            Hi, I&apos;m Andy Yang, a passionate software developer with a love for creating innovative solutions. I am currently pursuing my Masters in Computer Science at the University of Michigan.
+            Hi, I&apos;m Andy Yang, a passionate software developer with a love for creating innovative solutions. I am currently pursuing my Master&apos;s in Computer Science at the University of Michigan.
           </p>
           <p className="leading-7 mt-4 sm:mt-6">
-            I have a strong background in software engineering and have worked on various projects that span different domains. I enjoy exploring new technologies and continuously improving my skills.
-          </p>
-          <p className="leading-7 mt-4 sm:mt-6">
-            In my free time, I love to work on personal projects, contribute to open-source, and share my knowledge with the community. Feel free to explore my website to learn more about my work and interests.
+            When I&apos;m not working on software projects, I like to snowboard, work on my project car, play poker, collect antique tennis rackets and play golf.
           </p>
         </section>
 
         {/* What I'm Doing Now Section */}
         <section className="mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl">
-            What I&apos;m Doing Now
+            What I&apos;m Doing Now <span className="text-lg font-normal">(Updated: September 2024)</span>
           </h2>
-          <p className="leading-7 mt-4 sm:mt-6">
-            Currently, I am focused on completing my Masters in Computer Science at the University of Michigan. I am also working on several personal projects and contributing to open-source communities.
-          </p>
-          <p className="leading-7 mt-4 sm:mt-6">
-            In addition, I am exploring new technologies and methodologies to enhance my skills and stay updated with the latest trends in the tech industry.
-          </p>
+          <ul className="list-disc list-inside leading-7 mt-4 sm:mt-6">
+            <li>Completing my Master&apos;s in Computer Science at the University of Michigan</li>
+            <li>Recruiting for fulltime software engineering roles</li>
+            <li>Leading a team to do a redesign of the sanxi.com website</li>
+            <li>Trying to finish round of golf without losing any balls</li>
+            <li>Staying updated with the latest trends in the tech industry</li>
+          </ul>
         </section>
 
         {/* Tools I Use Section */}
         <section className="mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl">
-            Tools I Use
+            Tools I've Used
           </h2>
           <ul className="list-disc list-inside leading-7 mt-4 sm:mt-6">
-            <li>Visual Studio Code</li>
-            <li>Git and GitHub</li>
-            <li>Node.js</li>
+            <li>Python</li>
+            <li>C++</li>
+            <li>Flask</li>
             <li>React and Next.js</li>
-            <li>Docker</li>
-            <li>Postman</li>
-            <li>Figma</li>
-            <li>Slack</li>
+            <li>Git</li>
+            <li>AWS</li>
+            <li>ROS</li>
+            <li>Unreal Engine 5</li>
+            <li>FANUC</li>
           </ul>
         </section>
 
@@ -55,11 +53,13 @@ export default function About() {
             My Timeline
           </h2>
           <ul className="list-disc list-inside leading-7 mt-4 sm:mt-6">
-            <li>2023: Started my Masters in Computer Science at the University of Michigan</li>
-            <li>2021: Graduated with a Bachelor&apos;s degree in Computer Science</li>
-            <li>2020: Interned at XYZ Company as a Software Engineer</li>
-            <li>2019: Started contributing to open-source projects</li>
-            <li>2018: Developed my first web application</li>
+            <li>2024: Recieved my Bachelor&apos;s degree and started my Master&apos;s through the SUGS program</li>
+            <li>2024: Interned at MiTek Inc working on computer vision software for automated building component manufacturing </li>
+            <li>2020: Started my Bachelor&apos;s degree in Computer Science at the University of Michigan College of Engineering</li>
+            <li>2018: Went to UC Berkeley for summer school, took CS61A, absolutely loved it, and decided to pursue a degree in Computer Science</li>
+            <li>2016: Wrote my first line of code in <a href="https://scratch.mit.edu/" className="text-blue-500">Scratch</a> </li>
+            <li>2010: Move to Vancouver, Canada. Fell in love with snowboarding</li>
+            <li>2002: Born in Fuzhou, China</li>
           </ul>
         </section>
 
@@ -72,10 +72,9 @@ export default function About() {
             Feel free to reach out to me through the following channels:
           </p>
           <ul className="list-disc list-inside leading-7 mt-4 sm:mt-6">
-            <li>Email: <a href="mailto:andy@example.com" className="text-blue-500">andy@example.com</a></li>
-            <li>LinkedIn: <a href="https://www.linkedin.com/in/andy-yang" className="text-blue-500">linkedin.com/in/andy-yang</a></li>
-            <li>GitHub: <a href="https://github.com/andy-yang" className="text-blue-500">github.com/andy-yang</a></li>
-            <li>Twitter: <a href="https://twitter.com/andy_yang" className="text-blue-500">@andy_yang</a></li>
+            <li>Email: <a href="mailto:andyyhyang@gmail.com" className="text-blue-500">andyyhyang@gmail.com</a></li>
+            <li>LinkedIn: <a href="https://www.linkedin.com/in/andyyhy" className="text-blue-500">linkedin.com/in/andyyhy</a></li>
+            <li>GitHub: <a href="https://github.com/andyyhy" className="text-blue-500">github.com/andyyhy</a></li>
           </ul>
         </section>
       </div>
