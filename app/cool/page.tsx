@@ -33,6 +33,21 @@ export default function CoolPage() {
             <Image src="/photos/photo4.jpeg" alt="Photo 4" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
             <Image src="/photos/photo5.jpeg" alt="Photo 5" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
             <Image src="/photos/photo6.jpeg" alt="Photo 6" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo7.jpeg" alt="Photo 7" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo8.jpeg" alt="Photo 8" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo9.jpeg" alt="Photo 9" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo10.jpeg" alt="Photo 10" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo11.jpeg" alt="Photo 11" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo12.jpeg" alt="Photo 12" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo13.jpeg" alt="Photo 13" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo14.jpeg" alt="Photo 14" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />    
+            <Image src="/photos/photo15.jpeg" alt="Photo 15" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo16.jpeg" alt="Photo 16" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo17.jpeg" alt="Photo 17" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo18.jpeg" alt="Photo 18" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+            <Image src="/photos/photo19.jpeg" alt="Photo 19" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
+
+            
           </div>
         </section>
       </div>
