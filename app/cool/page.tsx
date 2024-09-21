@@ -24,7 +24,7 @@ export default function CoolPage() {
         </section>
         <section className="mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-4">
-            Photo Gallery
+            Photos
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
             <Image src="/photos/photo1.jpeg" alt="Photo 1" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
