@@ -12,6 +12,7 @@ import {
 } from "@/components/ui/navigation-menu";
 import { Github, Instagram, Linkedin, Mail } from "lucide-react"
 import { Analytics } from "@vercel/analytics/react"
+import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const NotoSansSC = localFont({
   src: "/fonts/NotoSansSC-VariableFont_wght.ttf",
@@ -74,6 +75,7 @@ export default function RootLayout({
         </div>
         {children}
         <Analytics />
+        <SpeedInsights />
         <footer className="w-full border-t border-zinc-800 mt-8">
           <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8 flex justify-center space-x-6">
             <Link href="mailto:andyyhyang@gmail.com" target="_blank" rel="noopener noreferrer" passHref>
