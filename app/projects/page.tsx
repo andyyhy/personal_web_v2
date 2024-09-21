@@ -17,7 +17,7 @@ export default function Projects() {
           </p>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-2 gap-6">
             {projects.map((project, index) => (
-              <Card key={index} className="shadow-lg bg-zinc-50"> 
+              <Card key={index} className="shadow-lg bg-neutral-200"> 
                 <CardHeader>
                   <CardTitle className="text-xl text-pink-600">{project.name}</CardTitle>
                   <CardDescription>{project.year}</CardDescription>
