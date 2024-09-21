@@ -10,6 +10,7 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
+import { Github, Instagram, Linkedin, Mail } from "lucide-react"
 
 const NotoSansSC = localFont({
   src: "/fonts/NotoSansSC-VariableFont_wght.ttf",
@@ -29,6 +30,9 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en">
+      <head>
+        <link rel="icon" href="/ay.png" type="image/png" />
+      </head>
       <body className={`${NotoSansSC.variable} antialiased`}>
         <div className="w-full border-b border-zinc-800">
           <div className="max-w-4xl w-full mx-auto p-2 sm:p-4 md:p-6 flex flex-row justify-between items-center">
@@ -50,16 +54,16 @@ export default function RootLayout({
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <Link href="/docs" legacyBehavior passHref>
+                  <Link href="/projects" legacyBehavior passHref>
                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
                       Projects
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
-                  <Link href="/docs" legacyBehavior passHref>
+                  <Link href="/cool" legacyBehavior passHref>
                     <NavigationMenuLink className={navigationMenuTriggerStyle()}>
-                      Fun Stuff
+                      Cool Stuff
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
@@ -68,6 +72,22 @@ export default function RootLayout({
           </div>
         </div>
         {children}
+        <footer className="w-full border-t border-zinc-800 mt-8">
+          <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8 flex justify-center space-x-6">
+            <Link href="mailto:andyyhyang@gmail.com" target="_blank" rel="noopener noreferrer" passHref>
+              <Mail />
+            </Link>
+            <Link href="https://www.linkedin.com/in/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
+              <Linkedin />
+            </Link>
+            <Link href="https://www.instagram.com/andyyhy02/" target="_blank" rel="noopener noreferrer" passHref>
+              <Instagram />
+            </Link>
+            <Link href="https://github.com/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
+              <Github />
+            </Link>
+          </div>
+        </footer>
       </body>
     </html>
   );
