@@ -10,8 +10,8 @@ import {
   NavigationMenuList,
   navigationMenuTriggerStyle,
 } from "@/components/ui/navigation-menu";
-import { Github, Instagram, Linkedin, Mail } from "lucide-react"
-import { Analytics } from "@vercel/analytics/react"
+import { Github, Instagram, Linkedin, Mail } from "lucide-react";
+import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from '@vercel/speed-insights/next';
 
 const NotoSansSC = localFont({
@@ -40,7 +40,7 @@ export default function RootLayout({
           <div className="max-w-4xl w-full mx-auto p-2 sm:p-4 md:p-6 flex flex-row justify-between items-center">
             <div className="flex items-center space-x-4">
               <Link href="/" passHref>
-                  <Image src="/ay.png" alt="Logo" className="h-12 w-12" width={100} height={100} />
+                <Image src="/ay.png" alt="Logo" className="h-12 w-12" width={100} height={100} />
               </Link>
               <Link href="/" passHref>
                 <span className="hidden sm:block text-xl font-bold">Andy Yang</span>
@@ -77,19 +77,24 @@ export default function RootLayout({
         <Analytics />
         <SpeedInsights />
         <footer className="w-full border-t border-zinc-800 mt-8">
-          <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8 flex justify-center space-x-6">
-            <Link href="mailto:andyyhyang@gmail.com" target="_blank" rel="noopener noreferrer" passHref>
-              <Mail />
-            </Link>
-            <Link href="https://www.linkedin.com/in/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
-              <Linkedin />
-            </Link>
-            <Link href="https://www.instagram.com/andyyhy02/" target="_blank" rel="noopener noreferrer" passHref>
-              <Instagram />
-            </Link>
-            <Link href="https://github.com/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
-              <Github />
-            </Link>
+          <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8 flex flex-col items-center space-y-4">
+            <div className="flex justify-center space-x-6">
+              <Link href="mailto:andyyhyang@gmail.com" target="_blank" rel="noopener noreferrer" passHref>
+                <Mail />
+              </Link>
+              <Link href="https://www.linkedin.com/in/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
+                <Linkedin />
+              </Link>
+              <Link href="https://www.instagram.com/andyyhy02/" target="_blank" rel="noopener noreferrer" passHref>
+                <Instagram />
+              </Link>
+              <Link href="https://github.com/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
+                <Github />
+              </Link>
+            </div>
+            <p className="text-sm text-gray-500">
+              &copy; {new Date().getFullYear()} Andy Yu Han Yang. All rights reserved.
+            </p>
           </div>
         </footer>
       </body>
