@@ -26,8 +26,8 @@ export default function Projects() {
                   <p>{project.description}</p>
                 </CardContent>
                 <CardFooter className="flex justify-between">
-                  <Link href={project.demoLink} target="_blank" rel="noopener noreferrer" className={`${buttonVariants({ variant: "outline" })} border-black`}>Demo<ExternalLink className="ml-2 h-4 w-4" /> </Link>
-                  <Link href={project.sourceLink} target="_blank" rel="noopener noreferrer" className={`${buttonVariants({ variant: "outline" })} border-black`}>Source<ExternalLink className="ml-2 h-4 w-4" /> </Link>
+                  <Link href={project.demoLink} target="_blank" rel="noopener noreferrer" className={`${buttonVariants({ variant: "outlineDark" })}`}>Demo<ExternalLink className="ml-2 h-4 w-4" /> </Link>
+                  <Link href={project.sourceLink} target="_blank" rel="noopener noreferrer" className={`${buttonVariants({ variant: "outlineDark" })}`}>Source<ExternalLink className="ml-2 h-4 w-4" /> </Link>
                 </CardFooter>
               </Card>
             ))}
