@@ -3,21 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #121212;
-    --foreground: #E0E0E0;
-  }
+  --background: #0A0F1D;
+  --foreground: #eaecee;
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Noto Sans SC", sans-serif;
+  font-family: "Roboto", sans-serif;
 }
 
 @layer utilities {
@@ -89,4 +82,15 @@ body {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+::selection {
+  background-color: #8BC34A; /* Highlight background color */
+  color: #0A0F1D; /* Highlight text color */
+}
+
+/* For Firefox */
+::-moz-selection {
+  background-color: #8BC34A; /* Highlight background color */
+  color: #0A0F1D; /* Highlight text color */
 }

@@ -6,14 +6,13 @@ export default function Home() {
       <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8">
         <main className="flex flex-col-reverse md:flex-row items-start md:items-center mb-8 sm:mb-10 md:mb-12">
           <div className="md:w-2/3 md:pr-6">
-            <h1 className="scroll-m-20 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl">
-              Hey! I&apos;m Andy Yang
+            <p className="text-[#8BC34A]">Hey! I&apos;m</p>
+            <h1 className="text-gray-400 scroll-m-20 text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl my-6">
+              Andy (Yu Han) Yang
             </h1>
-            <p className="leading-7 mt-4 sm:mt-6">
-              I&apos;m a Master&apos;s student at the <a href="https://cse.engin.umich.edu" className="text-[#FFCB05] hover:underline">University of Michigan</a> studying Computer Science and Engineering. I enjoy creating digital experiences and solving everyday problems through innovative software solutions.
-            </p>
-            <p className="leading-7 mt-4 sm:mt-6">
-              On this site, you can learn a little bit <a href="/about" className="text-pink-600 hover:underline">about me</a>, check out <a href="/projects" className="text-pink-600 hover:underline">projects</a> I have worked on, and <a href="/cool" className="text-pink-600 hover:underline">cool stuff</a> I have done for fun.
+            <h2 className="text-gray-400 text-xl">CSE Master&apos;s student at the <a href="https://cse.engin.umich.edu" className="text-[#8BC34A] hover:underline">University of Michigan</a></h2>
+            <p className="leading-7 mt-2 sm:mt-4 text-gray-500">
+              I enjoy creating digital experiences and solving everyday problems through innovative software solutions.
             </p>
           </div>
           <div className="mt-6 md:mt-0 md:ml-12 md:w-1/3 flex justify-start md:justify-center">

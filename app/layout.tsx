@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import Link from "next/link";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -36,35 +35,32 @@ export default function RootLayout({
         <link rel="icon" href="/ay.png" type="image/png" />
       </head>
       <body className={`${NotoSansSC.variable} antialiased`}>
-        <div className="w-full border-b border-zinc-800">
-          <div className="max-w-4xl w-full mx-auto p-2 sm:p-4 md:p-6 flex flex-row justify-between items-center">
+        <div className="w-full border-b border-zinc-800 px-4 sm:px-6 md:px-8">
+          <div className="max-w-4xl w-full mx-auto py-4 px-2 sm:px-4 md:px-6 flex flex-row justify-between items-center">
             <div className="flex items-center space-x-4">
               <Link href="/" passHref>
-                <Image src="/ay.png" alt="Logo" className="h-12 w-12" width={100} height={100} />
-              </Link>
-              <Link href="/" passHref>
-                <span className="hidden sm:block text-xl font-bold">Andy Yang</span>
+                <span className="hidden sm:block text-xl font-bold text-[#8BC34A]">Andy Yang</span>
               </Link>
             </div>
-            <NavigationMenu className="flex justify-center items-center w-full">
+            <NavigationMenu className="flex justify-center items-center w-full text-gray-400">
               <NavigationMenuList className="flex space-x-4 md:space-x-8">
                 <NavigationMenuItem>
                   <Link href="/about" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} hover:bg-[#8BC34A]`}>
                       About Me
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link href="/projects" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} hover:bg-[#8BC34A]`}>
                       Projects
                     </NavigationMenuLink>
                   </Link>
                 </NavigationMenuItem>
                 <NavigationMenuItem>
                   <Link href="/cool" legacyBehavior passHref>
-                    <NavigationMenuLink className={navigationMenuTriggerStyle()}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} hover:bg-[#8BC34A]`}>
                       Cool Stuff
                     </NavigationMenuLink>
                   </Link>
@@ -76,20 +72,20 @@ export default function RootLayout({
         {children}
         <Analytics />
         <SpeedInsights />
-        <footer className="w-full border-t border-zinc-800 mt-8">
+        <footer>
           <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8 flex flex-col items-center space-y-4">
-            <div className="flex justify-center space-x-6">
+            <div className="flex flex-row space-x-4 lg:fixed lg:bottom-6 lg:left-6 lg:flex-col lg:space-y-4 lg:space-x-0">
               <Link href="mailto:andyyhyang@gmail.com" target="_blank" rel="noopener noreferrer" passHref>
-                <Mail />
+                <Mail className="h-6 w-6 text-gray-500 hover:text-[#8BC34A] transition-colors duration-200" />
               </Link>
               <Link href="https://www.linkedin.com/in/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
-                <Linkedin />
+                <Linkedin className="h-6 w-6 text-gray-500 hover:text-[#8BC34A] transition-colors duration-200" />
               </Link>
               <Link href="https://www.instagram.com/andyyhy02/" target="_blank" rel="noopener noreferrer" passHref>
-                <Instagram />
+                <Instagram className="h-6 w-6 text-gray-500 hover:text-[#8BC34A] transition-colors duration-200" />
               </Link>
               <Link href="https://github.com/andyyhy" target="_blank" rel="noopener noreferrer" passHref>
-                <Github />
+                <Github className="h-6 w-6 text-gray-500 hover:text-[#8BC34A] transition-colors duration-200" />
               </Link>
             </div>
             <p className="text-sm text-gray-500">
@@ -97,6 +93,7 @@ export default function RootLayout({
             </p>
           </div>
         </footer>
+        
       </body>
     </html>
   );
