@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+
 import Link from "next/link";
 import localFont from "next/font/local";
 import "./globals.css";
@@ -46,7 +47,7 @@ export default function RootLayout({
               <NavigationMenuList className="flex space-x-4 md:space-x-8">
                 <NavigationMenuItem>
                   <Link href="/about" legacyBehavior passHref>
-                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()} hover:bg-[#8BC34A]`}>
+                    <NavigationMenuLink className={`${navigationMenuTriggerStyle()}`}>
                       About Me
                     </NavigationMenuLink>
                   </Link>
