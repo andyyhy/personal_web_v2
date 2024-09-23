@@ -21,8 +21,8 @@ const NotoSansSC = localFont({
 });
 
 export const metadata: Metadata = {
-  title: "andyyhy",
-  description: "Andy's personal website",
+  title: "andyyhy - Andy Yu Han Yang",
+  description: "Andy Yu Han Yang's personal website",
 };
 
 export default function RootLayout({
