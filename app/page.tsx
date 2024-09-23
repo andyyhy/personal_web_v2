@@ -54,6 +54,31 @@ export default function Home() {
         </section>
       </div>
       <div className="w-full max-w-4xl mx-auto mt-24">
+        <section id="skills" className="text-gray-400">
+          <h2 className="text-2xl font-bold mb-8">Tech I've Been Using Recently </h2>
+          <div className="flex flex-col md:flex-row md:space-x-8">
+            <div className="md:w-1/3 mb-8">
+              <h3 className="text-xl font-semibold mb-4">Programming Languages</h3>
+              <p className="leading-7 text-gray-500">
+                Python, C++, Typescript, JavaScript, C, Java
+              </p>
+            </div>
+            <div className="md:w-1/3 mb-8">
+              <h3 className="text-xl font-semibold mb-4">Tools</h3>
+              <p className="leading-7 text-gray-500">
+                Git, Docker, VS Code, Nginx, FANUC, UE5, AWS, MySQL
+              </p>
+            </div>
+            <div className="md:w-1/3">
+              <h3 className="text-xl font-semibold mb-4">Frameworks</h3>
+              <p className="leading-7 text-gray-500">
+                React, Next.js, Flask, Pytorch
+              </p>
+            </div>
+          </div>
+        </section>
+      </div>
+      <div className="w-full max-w-4xl mx-auto mt-24">
         <section className="text-gray-400">
           <h2 className="text-2xl font-bold mb-8">Some Projects I&apos;ve Worked On</h2>
           <div className="mt-8 grid grid-cols-1 sm:grid-cols-3 gap-6">
