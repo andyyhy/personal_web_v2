@@ -24,7 +24,7 @@ export const projects = [
     year: "2021",
     name: "Ask 485",
     description: "Scalable search engine like Google",
-    demoLink: "https://github.com/andyyhy/Ask485",
+    demoLink: "https://www.youtube.com/watch?v=UNBRCjM_uMQ",
     sourceLink: "https://github.com/andyyhy/Ask485",
   },
   {
@@ -85,4 +85,28 @@ export const projects = [
   },
 
   // Add more projects as needed
+];
+
+export const featuredProjects = [
+  {
+    year: "2023",
+    name: "Risky Roads",
+    description: "VR platform for simulating driving scenarios",
+    demoLink: "https://penga7.wixsite.com/riskyroads",
+    sourceLink: "https://www.unrealengine.com/en-US/unreal-engine-5",
+  },
+  {
+    year: "2021",
+    name: "Insta 485",
+    description: "Instagram clone built with React and Flask",
+    demoLink: "https://www.youtube.com/watch?v=4YtFGix3M2U",
+    sourceLink: "https://github.com/andyyhy/Insta485",
+  },
+  {
+    year: "2021",
+    name: "Ask 485",
+    description: "Scalable search engine like Google",
+    demoLink: "https://www.youtube.com/watch?v=UNBRCjM_uMQ",
+    sourceLink: "https://github.com/andyyhy/Ask485",
+  },
 ];

@@ -6,11 +6,11 @@ export default function CoolPage() {
   return (
     <div className="min-h-screen p-4 sm:p-6 md:p-8">
       <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8">
-        <section className="mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-4">
+        <section className="h-dvh">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-8 text-gray-400">
             Iceland Mini Movie
           </h2>
-          <div className="relative shadow-xl" style={{ paddingBottom: '56.25%', height: 0 }}>
+          <div className="relative shadow-xl" style={{ paddingBottom: '56.25%', height: 0, boxShadow: '0px 8px 100px rgba(0, 85, 170, 0.3)' }}>
             <Iframe 
                 className="absolute top-0 left-0 w-full h-full"
                 url="https://www.youtube.com/embed/enI-_nszpuY?si=oYRnAx0C1ZdNiPbK" 
@@ -21,9 +21,16 @@ export default function CoolPage() {
                 allowFullScreen
             />
           </div>
+          <div className="flex justify-center mt-8">
+            <a href="#photos" className="text-[#8BC34A] hover:text-[#6FAF3D] transition-transform duration-200 transform hover:scale-150">
+              <svg className="h-8 w-8 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
+              </svg>
+            </a>
+          </div>
         </section>
-        <section className="mb-12">
-          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-4">
+        <section id='photos'className="mb-12">
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-4 text-gray-400">
             Photos
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">

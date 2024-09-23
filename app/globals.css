@@ -95,3 +95,7 @@ body {
   background-color: #8BC34A; /* Highlight background color */
   color: #0A0F1D; /* Highlight text color */
 }
+
+html{
+  scroll-behavior: smooth;
+}
