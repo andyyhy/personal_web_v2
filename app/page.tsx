@@ -55,7 +55,7 @@ export default function Home() {
       </div>
       <div className="w-full max-w-4xl mx-auto mt-24">
         <section id="skills" className="text-gray-400">
-          <h2 className="text-2xl font-bold mb-8">Tech I've Been Using Recently </h2>
+          <h2 className="text-2xl font-bold mb-8">Tech I&apos;ve Been Using Recently </h2>
           <div className="flex flex-col md:flex-row md:space-x-8">
             <div className="md:w-1/3 mb-8">
               <h3 className="text-xl font-semibold mb-4">Programming Languages</h3>
