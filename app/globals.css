@@ -3,15 +3,14 @@
 @tailwind utilities;
 
 :root {
-  --background: #0A0F1D;
+  --background: #0a0f1d;
   --foreground: #eaecee;
-  
 }
 
 body {
   color: var(--foreground);
   background: var(--background);
-  font-family: "Roboto", sans-serif;
+  font-family: "Inter", sans-serif;
 }
 
 @layer utilities {
@@ -86,16 +85,16 @@ body {
 }
 
 ::selection {
-  background-color: #8BC34A; /* Highlight background color */
-  color: #0A0F1D; /* Highlight text color */
+  background-color: #8bc34a; /* Highlight background color */
+  color: #0a0f1d; /* Highlight text color */
 }
 
 /* For Firefox */
 ::-moz-selection {
-  background-color: #8BC34A; /* Highlight background color */
-  color: #0A0F1D; /* Highlight text color */
+  background-color: #8bc34a; /* Highlight background color */
+  color: #0a0f1d; /* Highlight text color */
 }
 
-html{
+html {
   scroll-behavior: smooth;
 }
