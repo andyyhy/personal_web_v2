@@ -1,6 +1,6 @@
-import 'tailwindcss/tailwind.css';
-import Iframe from 'react-iframe';
-import Image from 'next/image';
+import "tailwindcss/tailwind.css";
+import Iframe from "react-iframe";
+import Image from "next/image";
 
 export default function CoolPage() {
   return (
@@ -8,53 +8,186 @@ export default function CoolPage() {
       <div className="max-w-4xl w-full mx-auto p-4 sm:p-6 md:p-8">
         <section className="h-dvh">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-8 text-gray-400">
-            Iceland Mini Movie
+            Japan
           </h2>
-          <div className="relative shadow-xl" style={{ paddingBottom: '56.25%', height: 0, boxShadow: '0px 8px 100px rgba(0, 85, 170, 0.3)' }}>
-            <Iframe 
-                className="absolute top-0 left-0 w-full h-full"
-                url="https://www.youtube.com/embed/enI-_nszpuY?si=oYRnAx0C1ZdNiPbK" 
-                title="YouTube video player" 
-                frameBorder={0} 
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" 
-                referrerpolicy="strict-origin-when-cross-origin" 
-                allowFullScreen
+          <div
+            className="relative shadow-xl mb-8"
+            style={{
+              paddingBottom: "56.25%",
+              height: 0,
+              boxShadow: "0px 8px 100px rgba(0, 85, 170, 0.3)",
+            }}
+          >
+            <Iframe
+              className="absolute top-0 left-0 w-full h-full"
+              url="https://www.youtube.com/embed/gdxlpziR4UY?si=sYf9i41OegPH5dGW"
+              title="YouTube video player"
+              frameBorder={0}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowFullScreen
             />
           </div>
-          <div className="flex justify-center mt-24">
-            <a href="#photos" className="text-[#8BC34A] hover:text-[#6FAF3D] transition-transform duration-200 transform hover:scale-150">
-              <svg className="h-8 w-8 " xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M19 9l-7 7-7-7" />
-              </svg>
-            </a>
+          <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-8 text-gray-400">
+            Iceland
+          </h2>
+          <div
+            className="relative shadow-xl mb-8"
+            style={{
+              paddingBottom: "56.25%",
+              height: 0,
+              boxShadow: "0px 8px 100px rgba(0, 85, 170, 0.3)",
+            }}
+          >
+            <Iframe
+              className="absolute top-0 left-0 w-full h-full"
+              url="https://www.youtube.com/embed/enI-_nszpuY?si=oYRnAx0C1ZdNiPbK"
+              title="YouTube video player"
+              frameBorder={0}
+              allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+              referrerpolicy="strict-origin-when-cross-origin"
+              allowFullScreen
+            />
           </div>
         </section>
-        <section id='photos'className="mb-12">
+        <section id="photos" className="mb-12">
           <h2 className="text-3xl sm:text-4xl md:text-5xl font-extrabold tracking-tight lg:text-5xl mb-4 text-gray-400">
             Photos
           </h2>
           <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-4">
-            <Image src="/photos/photo1.jpeg" alt="Photo 1" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo2.jpeg" alt="Photo 2" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo3.jpeg" alt="Photo 3" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo4.jpeg" alt="Photo 4" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo5.jpeg" alt="Photo 5" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo6.jpeg" alt="Photo 6" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo7.jpeg" alt="Photo 7" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo8.jpeg" alt="Photo 8" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo9.jpeg" alt="Photo 9" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo10.jpeg" alt="Photo 10" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo11.jpeg" alt="Photo 11" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo12.jpeg" alt="Photo 12" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo13.jpeg" alt="Photo 13" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo14.jpeg" alt="Photo 14" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />    
-            <Image src="/photos/photo15.jpeg" alt="Photo 15" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo16.jpeg" alt="Photo 16" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo17.jpeg" alt="Photo 17" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo18.jpeg" alt="Photo 18" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-            <Image src="/photos/photo19.jpeg" alt="Photo 19" className="w-full h-auto object-contain rounded-lg" width={500} height={500} />
-
-            
+            <Image
+              src="/photos/photo1.jpeg"
+              alt="Photo 1"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo2.jpeg"
+              alt="Photo 2"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo3.jpeg"
+              alt="Photo 3"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo4.jpeg"
+              alt="Photo 4"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo5.jpeg"
+              alt="Photo 5"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo6.jpeg"
+              alt="Photo 6"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo7.jpeg"
+              alt="Photo 7"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo8.jpeg"
+              alt="Photo 8"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo9.jpeg"
+              alt="Photo 9"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo10.jpeg"
+              alt="Photo 10"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo11.jpeg"
+              alt="Photo 11"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo12.jpeg"
+              alt="Photo 12"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo13.jpeg"
+              alt="Photo 13"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo14.jpeg"
+              alt="Photo 14"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo15.jpeg"
+              alt="Photo 15"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo16.jpeg"
+              alt="Photo 16"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo17.jpeg"
+              alt="Photo 17"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo18.jpeg"
+              alt="Photo 18"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
+            <Image
+              src="/photos/photo19.jpeg"
+              alt="Photo 19"
+              className="w-full h-auto object-contain rounded-lg"
+              width={500}
+              height={500}
+            />
           </div>
         </section>
       </div>
