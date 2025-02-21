@@ -1,44 +1,95 @@
-import React, { ReactNode }from 'react';
+import React, { ReactNode } from "react";
 
 const timelineData = [
   {
-    date: '2024 - Present',
+    date: "2024 - Present",
     title: (
       <>
-        <a href="https://sanxi.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#8BC34A]">Sanxi Group</a>
+        <a
+          href="https://ai.umich.edu/xr-initiative/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#8BC34A]"
+        >
+          University of Michigan Center For Academic Innovation
+        </a>
+      </>
+    ),
+    description: "Developing a VR app for concussion daignostic simulation",
+  },
+  {
+    date: "2024 - Present",
+    title: (
+      <>
+        <a
+          href="https://sanxi.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#8BC34A]"
+        >
+          Sanxi Group
+        </a>
       </>
     ),
     description: (
       <>
-        Leading a team to revamp <a href="https://sanxi.com" target="_blank" rel="noopener noreferrer" className="hover:underline">sanxi.com</a>
+        Leading a team to revamp{" "}
+        <a
+          href="https://sanxi.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:underline"
+        >
+          sanxi.com
+        </a>
       </>
     ),
   },
   {
-    date: '2023 - 2024',
+    date: "2023 - 2024",
     title: (
       <>
-        <a href="https://www.mii.com" target="_blank" rel="noopener noreferrer" className="hover:text-[#8BC34A]">MiTek Inc.</a>
+        <a
+          href="https://www.mii.com"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#8BC34A]"
+        >
+          MiTek Inc.
+        </a>
       </>
     ),
-    description: 'Systems Software Engineering Intern',
+    description: "Systems Software Engineering Intern",
   },
   {
-    date: '2020 - 2025',
+    date: "2020 - 2025",
     title: (
       <>
-        <a href="https://umich.edu" target="_blank" rel="noopener noreferrer" className="hover:text-[#8BC34A]">University of Michigan</a>
+        <a
+          href="https://umich.edu"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="hover:text-[#8BC34A]"
+        >
+          University of Michigan
+        </a>
       </>
     ),
     description: "Bachelor's and Master's in Computer Science",
   },
-  
-  
-  
+
   // Add more items as needed
 ];
 
-const TimelineItem = ({ date, title, description }: { date: string, title: ReactNode, description: ReactNode }) => {
+const TimelineItem = ({
+  date,
+  title,
+  description,
+}: {
+  date: string;
+  title: ReactNode;
+  description: ReactNode;
+}) => {
   return (
     <ol className="relative border-l border-gray-200 pl-2">
       <li className="mb-10 ml-4">
@@ -46,12 +97,8 @@ const TimelineItem = ({ date, title, description }: { date: string, title: React
         <time className="mb-1 text-sm font-normal leading-none text-gray-500 ">
           {date}
         </time>
-        <h3 className="text-lg font-semibold text-gray-400">
-          {title}
-        </h3>
-        <p className="text-base font-normal text-gray-500">
-          {description}
-        </p>
+        <h3 className="text-lg font-semibold text-gray-400">{title}</h3>
+        <p className="text-base font-normal text-gray-500">{description}</p>
       </li>
     </ol>
   );
@@ -64,7 +111,7 @@ const Timeline = () => {
         <TimelineItem
           key={index}
           date={item.date}
-          title={item.title}  // Pass the element directly
+          title={item.title} // Pass the element directly
           description={item.description}
         />
       ))}
