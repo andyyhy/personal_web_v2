@@ -5,8 +5,8 @@ import { Analytics } from "@vercel/analytics/react";
 import { SpeedInsights } from "@vercel/speed-insights/next";
 
 export const metadata: Metadata = {
-  title: "哦！原来你也在这里",
-  description: "哦！原来你也在这里",
+  title: "哦！原来你也在这里 :)",
+  description: "哦！原来你也在这里 :)",
 };
 
 export default function RootLayout({
