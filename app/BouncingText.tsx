@@ -1,23 +1,32 @@
 "use client";
 
 import { useEffect, useRef } from "react";
+import { FONT_FAMILY } from "./message";
 
+// Soft, bright colours that all read well on the dark background.
+// The first is the site's original green.
 const COLORS = [
   "#8BC34A",
-  "#FF5252",
-  "#40C4FF",
-  "#FFD740",
-  "#E040FB",
-  "#FF6E40",
-  "#64FFDA",
-  "#FFFFFF",
+  "#4FC3F7",
+  "#FF8A80",
+  "#FFD54F",
+  "#B39DDB",
+  "#F48FB1",
+  "#80DEEA",
 ];
 
 // Speed scales with the screen so the drift feels the same on a phone and a
 // large monitor: a fraction of the shorter side per second, within limits.
-const SPEED_FRACTION = 0.18;
-const MIN_SPEED = 70;
-const MAX_SPEED = 220;
+const SPEED_FRACTION = 0.16;
+const MIN_SPEED = 60;
+const MAX_SPEED = 240;
+
+// Font size follows the viewport so the text always has room to move:
+// - phones: about half the screen width (5.5vw)
+// - short landscape screens: limited by height (8vh)
+// - large monitors: keeps growing, but more slowly (1.5rem + 2.5vw),
+//   about a third of the width on a 4K screen
+const FONT_SIZE = "clamp(1rem, min(5.5vw, 8vh, 1.5rem + 2.5vw), 10rem)";
 
 function nextColor(current: string) {
   const choices = COLORS.filter((c) => c !== current);
@@ -37,7 +46,6 @@ export default function BouncingText({ text }: { text: string }) {
     ).matches;
 
     let color = COLORS[0];
-    el.style.color = color;
 
     let maxX = 0;
     let maxY = 0;
@@ -57,17 +65,22 @@ export default function BouncingText({ text }: { text: string }) {
       el.style.transform = `translate3d(${px}px, ${py}px, 0)`;
     };
 
+    // The server renders the text centred; take over from that same spot so
+    // there's no jump when the animation starts.
     measure();
-    let x = reduceMotion ? maxX / 2 : Math.random() * maxX;
-    let y = reduceMotion ? maxY / 2 : Math.random() * maxY;
-    // Direction only (+1 / -1); magnitude comes from `speed`.
+    let x = maxX / 2;
+    let y = maxY / 2;
+    el.style.left = "0";
+    el.style.top = "0";
+    place(x, y);
+
+    // Pick a random diagonal. Direction only (+1 / -1); `speed` sets the pace.
     let dx = Math.random() < 0.5 ? -1 : 1;
     let dy = Math.random() < 0.5 ? -1 : 1;
-    place(x, y);
-    el.style.visibility = "visible";
 
-    // Watches both the container and the text, so it also catches mobile
-    // browser bars showing/hiding and the font size changing with the viewport.
+    // Watches both the container and the text, so it also catches phone
+    // rotation, mobile browser bars showing/hiding, the font loading, and
+    // the font size changing with the viewport.
     const observer = new ResizeObserver(() => {
       measure();
       if (reduceMotion) {
@@ -82,7 +95,7 @@ export default function BouncingText({ text }: { text: string }) {
     observer.observe(box);
     observer.observe(el);
 
-    // Users who ask for less motion get the text still and centered.
+    // Users who ask for less motion get the text still and centred.
     if (reduceMotion) return () => observer.disconnect();
 
     let frame = 0;
@@ -136,14 +149,15 @@ export default function BouncingText({ text }: { text: string }) {
   return (
     <h1
       ref={ref}
-      // Font size follows the viewport so the text always leaves room to
-      // move: about half the width on phones, capped on large screens and
-      // limited by height on short landscape screens.
       style={{
-        visibility: "hidden",
-        fontSize: "clamp(1rem, min(5.5vw, 9vh), 3.5rem)",
+        left: "50%",
+        top: "50%",
+        transform: "translate(-50%, -50%)",
+        color: COLORS[0],
+        fontSize: FONT_SIZE,
+        fontFamily: `"${FONT_FAMILY}", system-ui, sans-serif`,
       }}
-      className="absolute left-0 top-0 m-0 whitespace-nowrap font-bold leading-tight tracking-wide will-change-transform select-none"
+      className="bouncing-text absolute m-0 whitespace-nowrap font-normal leading-tight tracking-wide will-change-transform select-none"
     >
       {text}
     </h1>

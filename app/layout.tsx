@@ -1,12 +1,18 @@
-import type { Metadata } from "next";
+import type { Metadata, Viewport } from "next";
 
 import "./globals.css";
-import { Analytics } from "@vercel/analytics/react";
+import { Analytics } from "@vercel/analytics/next";
 import { SpeedInsights } from "@vercel/speed-insights/next";
+import { FONT_URL, MESSAGE } from "./message";
 
 export const metadata: Metadata = {
-  title: "哦！原来你也在这里 :)",
-  description: "哦！原来你也在这里 :)",
+  title: MESSAGE,
+  description: MESSAGE,
+};
+
+// Matches the page background so mobile browser bars blend in.
+export const viewport: Viewport = {
+  themeColor: "#000000",
 };
 
 export default function RootLayout({
@@ -18,8 +24,15 @@ export default function RootLayout({
     <html lang="zh-CN">
       <head>
         <link rel="icon" href="/ay.png" type="image/png" />
+        <link rel="preconnect" href="https://fonts.googleapis.com" />
+        <link
+          rel="preconnect"
+          href="https://fonts.gstatic.com"
+          crossOrigin="anonymous"
+        />
+        <link rel="stylesheet" href={FONT_URL} />
       </head>
-      <body>
+      <body className="antialiased">
         {children}
         <Analytics />
         <SpeedInsights />
