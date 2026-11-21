@@ -1,12 +1,13 @@
 /**
  * Opening animation for the landing page.
  *
- * Two thin threads drift alone in the dark. They sense each other and draw
- * closer, thickening and brightening as they do, then interweave. Their tips
- * bloom into two souls that circle faster and faster until they merge into
- * one point of light. The light swells until the whole screen is white, then
- * cuts to pitch black, and the page's text emerges from the dark where they
- * met.
+ * A thread appears alone in the dark, then another, far away. Each drifts on
+ * its own until they notice each other: everything holds its breath, one
+ * turns toward the other, and the other follows. They draw closer, thickening
+ * and brightening, touch, and interweave. Their tips bloom into two souls that
+ * circle each other and become one. Their light floods the screen and stays,
+ * until it cuts to pitch black, and the page's text slowly emerges from the
+ * dark where they met.
  *
  * Everything is drawn on one canvas in "stage units": 1 unit is the shorter
  * side of the screen and (0, 0) is its centre, so the scene keeps the same
@@ -23,27 +24,32 @@ export interface IntroCallbacks {
   onDone: () => void;
 }
 
-// Timeline in seconds. The text emerges at `reveal`, and is fully there
-// before 10 seconds.
+// Timeline in seconds. The text starts to emerge at `reveal` and is fully
+// there by 20 seconds.
 const T = {
-  threadsIn: 0.2,
-  threadsInEnd: 1.4,
-  notice: 1.0, // they sense each other and turn toward one another
-  noticeFull: 2.2,
-  approach: 1.9, // drawn toward each other
-  approachFull: 3.4, // fully drawn into their dance
-  twist: 3.4, // they start to twist around each other
-  close: 4.4, // side by side and interweaving
-  soul: 5.3, // their tips bloom into souls
-  soulFull: 6.2,
-  plunge: 6.45, // the final spiral in
-  travelStart: 2.6, // the pair starts travelling together
-  travelEnd: 6.55, // the pair settles at the meeting point
-  merge: 7.05, // the two souls become one
-  swell: 6.5, // light starts to pour out of them...
-  white: 7.8, // ...until the whole screen is white
-  cut: 7.98, // then, all of a sudden, pitch black
-  reveal: 8.5, // the text emerges from the dark
+  dustIn: 1.5, // the abyss: only faint dust at first
+  aIn: 0.6, // one thread appears, alone...
+  aInEnd: 2.2,
+  bIn: 2.2, // ...then another, far away
+  bInEnd: 3.6,
+  notice: 5.4, // they sense each other; everything holds its breath
+  noticeA: 5.5, // one turns toward the other...
+  noticeB: 6.0, // ...and the other follows
+  turn: 1.2, // how long turning toward each other takes
+  approach: 6.8, // drawn toward each other
+  approachFull: 8.4, // fully drawn into their dance
+  travelStart: 8.0, // the pair starts travelling together
+  twist: 9.0, // they start to twist around each other
+  close: 9.8, // side by side and interweaving
+  soul: 12.0, // their tips bloom into souls
+  soulFull: 13.0,
+  travelEnd: 13.6, // the pair settles at the meeting point
+  plunge: 13.9, // the final spiral in
+  merge: 14.6, // the two souls become one; a calm moment
+  swell: 15.0, // their light floods out...
+  white: 16.2, // ...until the screen is white, and stays
+  cut: 17.3, // then, all of a sudden, pitch black
+  reveal: 17.9, // the text emerges from the dark
 } as const;
 
 // Barely-there tints: one soul a touch warm, the other a touch cool.
@@ -159,13 +165,19 @@ interface Thread {
   /** Where the tip has been, oldest first. The thread is drawn along it. */
   hist: { x: number; y: number; z: number }[];
   free: Point; // where it would drift on its own
-  head: Point; // where its tip actually is
+  freeVel: Point; // and how fast
+  aim: Point; // where its tip is being drawn to
+  head: Point; // where its tip actually is: follows `aim` softly
+  spring: Point; // the tip's velocity while following
   vel: Point;
   z: number; // depth while interweaving: > 0 passes in front
   dir: number;
+  heading: number; // direction it is drifting
   L: number;
   tint: RGB;
   sprite: HTMLCanvasElement;
+  appear: [number, number]; // when it fades in
+  noticeAt: number; // when it turns toward the other
   wander: { amp: number; f1: number; f2: number; p1: number; p2: number; speed: number };
   heart: { ph: number; f: number; bias: number };
   pulses: number[];
@@ -178,7 +190,10 @@ interface Thread {
 interface Dance {
   M: Point; // where they meet
   path: (f: number) => { p: Point; d: Point };
+  mid0: Point; // midpoint between them when the dance began
+  drift: Point; // how far that midpoint drifted while the pull took over
   R0: number;
+  v0: number; // how fast they were already closing in when the pull began
   rBraid: number;
   R: number;
   beta: number; // shape of their orbit as seen: 0 = side to side, 1 = a circle
@@ -200,8 +215,8 @@ function beat(ph: number) {
   );
 }
 
-/** Drama builds steadily from soon after they notice each other until the merge. */
-const intensityAt = (t: number) => Math.pow(clamp((t - 1.6) / (T.merge - 1.6)), 1.6);
+/** Drama builds steadily from the moment they notice each other until the merge. */
+const intensityAt = (t: number) => Math.pow(clamp((t - T.notice) / (T.merge - T.notice)), 1.6);
 
 const GLOW = [
   [14, 0.008],
@@ -210,6 +225,10 @@ const GLOW = [
   [3, 0.055],
   [1.8, 0.1],
 ] as const;
+
+/** 1 while everything holds its breath, as they notice each other. */
+const hesitationAt = (t: number) =>
+  smooth(T.notice - 0.4, T.notice + 0.1, t) * (1 - smooth(T.notice + 0.4, T.notice + 1.2, t));
 
 /** The final light: 0 → 1, slow at first, then flooding the screen. */
 const swellAt = (t: number) => Math.pow(clamp((t - T.swell) / (T.white - T.swell)), 2.2);
@@ -267,7 +286,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     return { x: c * k * frac, y: s * k * frac };
   };
 
-  const makeThread = (head: Point, tint: RGB): Thread => {
+  const makeThread = (head: Point, tint: RGB, appear: [number, number], noticeAt: number): Thread => {
     const toCentre = Math.atan2(-head.y, -head.x);
     const dir = toCentre + (Math.random() < 0.5 ? -1 : 1) * rand(0.5, 1.4);
     const L = rand(0.42, 0.52);
@@ -296,14 +315,20 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     return {
       hist,
       free: { ...head },
+      freeVel: { x: 0, y: 0 },
+      aim: { ...head },
       head: { ...head },
+      spring: { x: 0, y: 0 },
       vel: { x: 0, y: 0 },
       z: 0,
       dir,
+      heading: dir,
       L,
       tint,
       sprite: sprites.get(tint)!,
-      wander: { amp: rand(0.4, 0.7), f1: rand(0.3, 0.6), f2: rand(0.7, 1.1), p1: rand(0, TAU), p2: rand(0, TAU), speed: rand(0.04, 0.06) },
+      appear,
+      noticeAt,
+      wander: { amp: rand(0.4, 0.7), f1: rand(0.25, 0.5), f2: rand(0.6, 0.9), p1: rand(0, TAU), p2: rand(0, TAU), speed: rand(0.03, 0.045) },
       heart: { ph: rand(0, 1), f: 0.9, bias: 0 },
       pulses: [],
       echoes: [],
@@ -315,8 +340,8 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
 
   const spawnAngle = rand(0, TAU);
   const threads = [
-    makeThread(onSide(spawnAngle, rand(0.45, 0.8)), tints[0]),
-    makeThread(onSide(spawnAngle + Math.PI + rand(-0.6, 0.6), rand(0.45, 0.8)), tints[1]),
+    makeThread(onSide(spawnAngle, rand(0.45, 0.8)), tints[0], [T.aIn, T.aInEnd], T.noticeA),
+    makeThread(onSide(spawnAngle + Math.PI + rand(-0.6, 0.6), rand(0.45, 0.8)), tints[1], [T.bIn, T.bInEnd], T.noticeB),
   ];
   // Two hearts, out of step at first.
   threads[0].heart.bias = -rand(0.1, 0.2);
@@ -332,6 +357,8 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
   let dance: Dance | null = null;
   const pair: Point = { x: 0, y: 0 };
   let ripple = 0; // phase of the ripples running along the threads
+  let touchAt = -1; // when they first cross
+  const touch: Point = { x: 0, y: 0 };
 
   // --- Choreography --------------------------------------------------------
 
@@ -370,7 +397,16 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     return {
       M,
       path: makePath(c0, p1, p2, M),
+      mid0: { ...c0 },
+      drift: { x: 0, y: 0 },
       R0: dist / 2,
+      // Closing speed along the line between them (half of it, per thread), kept
+      // small enough that the radius still eases down without overshooting.
+      v0: clamp(
+        -((b.freeVel.x - a.freeVel.x) * dx + (b.freeVel.y - a.freeVel.y) * dy) / dist / 2,
+        0,
+        (3 * (dist / 2 - Math.min(0.04, dist / 5))) / (T.close - T.approach)
+      ),
       rBraid: Math.min(0.04, dist / 5),
       R: dist / 2,
       beta: 0,
@@ -381,10 +417,15 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     };
   };
 
-  /** Half the distance between them: closes in, holds while they interweave, then plunges. */
+  /** Half the distance between them: closes in (carrying on at the speed they
+   *  were already approaching), holds while they interweave, then plunges. */
   const radiusAt = (d: Dance, t: number) => {
-    if (t <= T.close)
-      return lerp(d.R0, d.rBraid, easeInOutCubic(clamp((t - T.approach) / (T.close - T.approach))));
+    if (t <= T.close) {
+      const span = T.close - T.approach;
+      const u = clamp((t - T.approach) / span);
+      // Cubic Hermite: starts at R0 moving inward at v0, arrives at rBraid at rest.
+      return (2 * u ** 3 - 3 * u ** 2 + 1) * d.R0 - (u ** 3 - 2 * u ** 2 + u) * d.v0 * span + (3 * u ** 2 - 2 * u ** 3) * d.rBraid;
+    }
     if (t <= T.plunge) return d.rBraid;
     return d.rBraid * (1 - Math.pow(clamp((t - T.plunge) / (T.merge - T.plunge)), 1.6));
   };
@@ -404,18 +445,27 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
 
   const freeStep = (th: Thread, other: Thread, t: number, dt: number) => {
     const w = th.wander;
-    let heading =
+    let desired =
       th.dir +
       w.amp * (0.6 * (Math.sin(w.f1 * t + w.p1) - Math.sin(w.p1)) + 0.4 * (Math.sin(w.f2 * t + w.p2) - Math.sin(w.p2)));
-    // They notice each other: each slowly turns toward the other and quickens a little.
-    const notice = smooth(T.notice, T.noticeFull, t);
+    // They notice each other: both pause, then each turns toward the other
+    // (one a little before the other) and quickens.
+    const notice = smooth(th.noticeAt, th.noticeAt + T.turn, t);
     if (notice > 0) {
       const toward = Math.atan2(other.free.y - th.free.y, other.free.x - th.free.x);
-      heading += angleDiff(toward, heading) * notice * 0.85;
+      desired += angleDiff(toward, desired) * notice * 0.85;
     }
-    const speed = w.speed * (1 + 1.2 * notice);
-    th.free.x += Math.cos(heading) * speed * dt;
-    th.free.y += Math.sin(heading) * speed * dt;
+    const speed =
+      w.speed * (1 - 0.75 * hesitationAt(t)) * (1 + 1.8 * notice) * (1 - smooth(T.approach, T.approachFull, t));
+    // Never turn tighter than a gentle arc for the current speed: a thread that
+    // has almost stopped can only turn slowly, so it swings round in a curve
+    // as it picks up speed instead of kinking.
+    const maxTurn = 18 * speed * dt;
+    th.heading += clamp(angleDiff(desired, th.heading), -maxTurn, maxTurn);
+    th.freeVel.x = Math.cos(th.heading) * speed;
+    th.freeVel.y = Math.sin(th.heading) * speed;
+    th.free.x += th.freeVel.x * dt;
+    th.free.y += th.freeVel.y * dt;
     const lx = HX - 0.1, ly = HY - 0.1;
     if (Math.abs(th.free.x) > lx) th.free.x -= Math.sign(th.free.x) * (Math.abs(th.free.x) - lx) * 3 * dt;
     if (Math.abs(th.free.y) > ly) th.free.y -= Math.sign(th.free.y) * (Math.abs(th.free.y) - ly) * 3 * dt;
@@ -449,7 +499,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     const I = intensityAt(t);
     const [a, b] = threads;
     // As they close in, both hearts quicken and fall into step.
-    const target = 0.85 + 1.6 * I;
+    const target = 0.85 + 1.6 * I - 1.1 * smooth(T.merge, T.merge + 0.8, t);
     const pull = (4 * I * I) / TAU;
     const offset = Math.sin(TAU * (b.heart.ph - a.heart.ph));
     for (const [th, sign] of [[a, 1], [b, -1]] as const) {
@@ -472,7 +522,15 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
       d.R = radiusAt(d, t);
       d.beta = betaAt(t);
       d.phi += d.spin * TAU * turnsAt(d, t) * dt;
-      const { p: c, d: dv } = d.path(travelAt(t));
+      // While the pull takes over, its centre follows the pair's own drift (which
+      // eases to a stop), then that offset fades as they travel to where they meet.
+      if (t <= T.approachFull) {
+        d.drift.x = (a.free.x + b.free.x) / 2 - d.mid0.x;
+        d.drift.y = (a.free.y + b.free.y) / 2 - d.mid0.y;
+      }
+      const prog = travelAt(t);
+      const { p: onPath, d: dv } = d.path(prog);
+      const c = { x: onPath.x + d.drift.x * (1 - prog), y: onPath.y + d.drift.y * (1 - prog) };
       const dl = Math.hypot(dv.x, dv.y);
       if (dl > 1e-5) {
         d.tan.x = dv.x / dl;
@@ -485,22 +543,45 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
       // Their orbit is a circle seen at an angle; this is how far in front or behind.
       const depth = sn * d.side * Math.sqrt(1 - d.beta * d.beta);
       const w = smooth(T.approach, T.approachFull, t);
-      a.head.x = lerp(a.free.x, c.x - ox, w);
-      a.head.y = lerp(a.free.y, c.y - oy, w);
-      b.head.x = lerp(b.free.x, c.x + ox, w);
-      b.head.y = lerp(b.free.y, c.y + oy, w);
+      a.aim.x = lerp(a.free.x, c.x - ox, w);
+      a.aim.y = lerp(a.free.y, c.y - oy, w);
+      b.aim.x = lerp(b.free.x, c.x + ox, w);
+      b.aim.y = lerp(b.free.y, c.y + oy, w);
       a.z = -depth * w;
       b.z = depth * w;
+      if (touchAt < 0 && Math.abs(d.phi) >= Math.PI / 2) {
+        touchAt = t;
+        touch.x = c.x;
+        touch.y = c.y;
+      }
     } else if (dance) {
       for (const th of threads) {
-        th.head.x = dance.M.x;
-        th.head.y = dance.M.y;
+        th.aim.x = dance.M.x;
+        th.aim.y = dance.M.y;
         th.z = 0;
       }
     } else {
       for (const th of threads) {
-        th.head.x = th.free.x;
-        th.head.y = th.free.y;
+        th.aim.x = th.free.x;
+        th.aim.y = th.free.y;
+      }
+    }
+
+    // Each tip follows its aim like silk on a soft spring, so every turn is a
+    // curve: loose while they float and approach, tighter as they braid, and
+    // tight for the fast final spiral.
+    const tau = lerp(lerp(0.2, 0.09, smooth(T.twist, T.close, t)), 0.03, smooth(T.soul, T.plunge, t));
+    const k = 2 / tau;
+    for (const th of threads) {
+      th.spring.x += (k * k * (th.aim.x - th.head.x) - 2 * k * th.spring.x) * dt;
+      th.spring.y += (k * k * (th.aim.y - th.head.y) - 2 * k * th.spring.y) * dt;
+      th.head.x += th.spring.x * dt;
+      th.head.y += th.spring.y * dt;
+    }
+    if (dance && t >= T.merge) {
+      for (const th of threads) {
+        th.head.x = dance.M.x;
+        th.head.y = dance.M.y;
       }
     }
     pair.x = (a.head.x + b.head.x) / 2;
@@ -536,7 +617,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
         m.vx += ((dx / d) * pull - (dy / d) * swirl) * dt;
         m.vy += ((dy / d) * pull + (dx / d) * swirl) * dt;
       }
-      const damp = Math.exp(-dt * 0.9);
+      const damp = Math.exp(-dt * (0.9 + 3 * hesitationAt(t)));
       m.vx *= damp;
       m.vy *= damp;
       m.x += m.vx * dt;
@@ -656,7 +737,6 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
   };
 
   const drawThreads = (t: number, P: number, G: number, S: number, I: number) => {
-    const fadeIn = smooth(T.threadsIn, T.threadsInEnd, t);
     const absorb = 1 - smooth(T.merge - 0.25, T.merge, t); // tails are drawn into the souls
     const core = px(lerp(0.9, 3, Math.pow(P, 1.3)) * (1 + 0.5 * S));
     const gap = px(1.6);
@@ -697,17 +777,21 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
       }
     }
 
+    const fadeOf = (th: Thread) => smooth(th.appear[0], th.appear[1], t);
+    // A soft brightening the moment each one notices the other.
+    const awareOf = (th: Thread) => 1 + 0.6 * Math.exp(-(((t - th.noticeAt - 0.2) / 0.45) ** 2));
     const coreAlpha = (th: Thread) =>
-      (0.6 + 0.4 * G) * fadeIn * (1 + beatAmp * 0.6 * beat(th.heart.ph));
+      (0.6 + 0.4 * G) * fadeOf(th) * awareOf(th) * (1 + beatAmp * 0.6 * beat(th.heart.ph));
 
     // Glow and core.
     for (const th of threads) {
       const buf = th.buf;
       if (!buf.n) continue;
       const hb = 1 + beatAmp * 0.6 * beat(th.heart.ph);
+      const fadeIn = fadeOf(th);
       ctx.globalAlpha = 1;
       // Stacked layers, wide and faint to narrow and brighter, read as a soft glow.
-      const glow = (0.25 + 0.75 * G) * fadeIn * hb;
+      const glow = (0.25 + 0.75 * G) * fadeIn * hb * awareOf(th);
       for (const [width, alpha] of GLOW) {
         ctx.fillStyle = rgba(th.tint, alpha * glow);
         ribbon(buf, buf.w, width);
@@ -767,13 +851,14 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     ctx.globalAlpha = 1;
   };
 
-  const drawMerged = (t: number, M: Point, L: number) => {
+  const drawMerged = (t: number, M: Point, L: number, hb: number) => {
     const a = smooth(T.merge - 0.04, T.merge + 0.03, t);
     if (a <= 0) return;
-    const flare = Math.exp(-Math.max(0, t - T.merge) / 0.09);
+    const flare = Math.exp(-Math.max(0, t - T.merge) / 0.12);
+    const breath = 1 + 0.08 * hb;
     const white = sprites.get(WHITE)!;
-    drawSprite(white, M.x, M.y, 0.13 + 0.08 * flare + 0.35 * L, 0.5 * a);
-    drawSprite(white, M.x, M.y, 0.045 + 0.12 * L, 0.9 * a);
+    drawSprite(white, M.x, M.y, (0.13 + 0.08 * flare + 0.35 * L) * breath, 0.5 * a);
+    drawSprite(white, M.x, M.y, (0.045 + 0.12 * L) * breath, 0.9 * a);
     ctx.globalAlpha = a;
     ctx.fillStyle = "#fff";
     ctx.beginPath();
@@ -815,7 +900,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     }
 
     // Dust.
-    const dustFade = smooth(0, 0.9, t);
+    const dustFade = smooth(0, T.dustIn, t);
     ctx.fillStyle = "#fff";
     for (const m of dust) {
       const near = Math.exp(-((m.x - centre.x) ** 2 + (m.y - centre.y) ** 2) / 0.05);
@@ -835,16 +920,36 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     if (t < T.merge + 0.02) {
       drawThreads(t, P, G, S, I);
       drawSouls(S, L);
+      // Their tips light up as they notice each other.
+      for (const th of threads) {
+        const g = Math.exp(-(((t - th.noticeAt - 0.2) / 0.5) ** 2));
+        drawSprite(th.sprite, th.head.x, th.head.y, 0.035, 0.45 * g * smooth(th.appear[0], th.appear[1], t));
+      }
     }
-    if (dance && t >= T.merge - 0.04) drawMerged(t, dance.M, L);
+
+    // A soft bloom of light where they first touch.
+    if (touchAt >= 0 && t - touchAt < 1.4) {
+      const f = (t - touchAt) / 1.4;
+      const out = 1 - (1 - f) ** 3;
+      drawSprite(sprites.get(WHITE)!, touch.x, touch.y, lerp(0.02, 0.14, out), 0.4 * (1 - f) ** 2);
+      ctx.globalAlpha = 0.12 * (1 - f) ** 2;
+      ctx.strokeStyle = "#fff";
+      ctx.lineWidth = px(1);
+      ctx.beginPath();
+      ctx.arc(touch.x, touch.y, lerp(0.01, 0.3, out), 0, TAU);
+      ctx.stroke();
+      ctx.globalAlpha = 1;
+    }
+    if (dance && t >= T.merge - 0.04) drawMerged(t, dance.M, L, hb);
 
     // The light pours out of them, brighter and brighter, pulsing faintly with
-    // their heartbeat, until the screen is white.
+    // their heartbeat, until the screen is white. It stays, still brightening
+    // a touch, right up to the cut.
     if (L > 0) {
       const pulse = t < T.white ? 1 + 0.06 * hb : 1;
       drawSprite(fog, centre.x, centre.y, lerp(0.2, 2.6, Math.pow(L, 0.55)), Math.min(1, (0.12 + 1.2 * L) * pulse));
       ctx.setTransform(1, 0, 0, 1, 0, 0);
-      ctx.globalAlpha = Math.min(1, Math.pow(L, 1.7) * pulse);
+      ctx.globalAlpha = Math.min(1, 0.9 * Math.pow(L, 1.7) * pulse + 0.1 * smooth(T.white, T.cut, t));
       ctx.fillStyle = "#fff";
       ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
