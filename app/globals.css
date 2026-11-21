@@ -27,15 +27,15 @@ body {
 .bouncing-text-inner {
   display: inline-block;
   transition:
-    opacity 2.1s cubic-bezier(0.45, 0, 0.3, 1),
-    filter 2.6s cubic-bezier(0.3, 0.1, 0.3, 1),
-    scale 3s cubic-bezier(0.2, 0.6, 0.2, 1);
+    opacity 3.4s cubic-bezier(0.55, 0, 0.35, 1),
+    filter 4.2s cubic-bezier(0.35, 0.1, 0.3, 1),
+    scale 4.6s cubic-bezier(0.2, 0.6, 0.2, 1);
 }
 
 .bouncing-text[data-waiting] .bouncing-text-inner {
   opacity: 0;
-  filter: blur(12px);
-  scale: 0.92;
+  filter: blur(16px);
+  scale: 0.93;
   transition: none;
 }
 

@@ -27,7 +27,7 @@ const MIN_SPEED = 60;
 const MAX_SPEED = 240;
 
 // Seconds to ease up to full speed after appearing.
-const RAMP_UP = 2.6;
+const RAMP_UP = 3.6;
 
 // Font size follows the viewport so the text always has room to move:
 // - phones: about half the screen width (5.5vw)
