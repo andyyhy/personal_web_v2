@@ -4,8 +4,9 @@
  * Two thin threads drift alone in the dark. They sense each other and draw
  * closer, thickening and brightening as they do, then interweave. Their tips
  * bloom into two souls that circle faster and faster until they merge into
- * one point of light, which bursts into stardust. The page's text is then
- * revealed where they met.
+ * one point of light. The light swells until the whole screen is white, then
+ * cuts to pitch black, and the page's text emerges from the dark where they
+ * met.
  *
  * Everything is drawn on one canvas in "stage units": 1 unit is the shorter
  * side of the screen and (0, 0) is its centre, so the scene keeps the same
@@ -22,7 +23,8 @@ export interface IntroCallbacks {
   onDone: () => void;
 }
 
-// Timeline in seconds. Everything is over by `end`, under 10 seconds.
+// Timeline in seconds. The text emerges at `reveal`, and is fully there
+// before 10 seconds.
 const T = {
   threadsIn: 0.2,
   threadsInEnd: 1.4,
@@ -32,16 +34,16 @@ const T = {
   approachFull: 3.4, // fully drawn into their dance
   twist: 3.4, // they start to twist around each other
   close: 4.4, // side by side and interweaving
-  soul: 5.4, // their tips bloom into souls
-  soulFull: 6.3,
-  plunge: 6.6, // the final spiral in
+  soul: 5.3, // their tips bloom into souls
+  soulFull: 6.2,
+  plunge: 6.45, // the final spiral in
   travelStart: 2.6, // the pair starts travelling together
-  travelEnd: 6.7, // the pair settles at the meeting point
-  merge: 7.3, // the two souls become one
-  burst: 7.62, // stardust
-  reveal: 7.95, // the text starts to materialise
-  fadeStart: 8.6,
-  end: 9.6,
+  travelEnd: 6.55, // the pair settles at the meeting point
+  merge: 7.05, // the two souls become one
+  swell: 6.5, // light starts to pour out of them...
+  white: 7.8, // ...until the whole screen is white
+  cut: 7.98, // then, all of a sudden, pitch black
+  reveal: 8.5, // the text emerges from the dark
 } as const;
 
 // Barely-there tints: one soul a touch warm, the other a touch cool.
@@ -61,7 +63,6 @@ const smooth = (e0: number, e1: number, x: number) => {
 };
 const easeInOutCubic = (x: number) =>
   x < 0.5 ? 4 * x * x * x : 1 - Math.pow(-2 * x + 2, 3) / 2;
-const easeOutCubic = (x: number) => 1 - Math.pow(1 - x, 3);
 const rand = (a: number, b: number) => a + Math.random() * (b - a);
 const angleDiff = (a: number, b: number) =>
   Math.atan2(Math.sin(a - b), Math.cos(a - b));
@@ -189,7 +190,6 @@ interface Dance {
 
 interface Mote { x: number; y: number; vx: number; vy: number; d: number; r: number; tw: number; tp: number }
 interface Wisp { x: number; y: number; vx: number; vy: number; born: number; life: number; r0: number; r1: number; a: number; sprite: HTMLCanvasElement }
-interface Spark { x: number; y: number; vx: number; vy: number; born: number; life: number; r: number; c: RGB; tw: number; tp: number; glint: boolean }
 
 /** Heartbeat shape: a "lub-dub" for each cycle of `ph`. */
 function beat(ph: number) {
@@ -211,10 +211,8 @@ const GLOW = [
   [1.8, 0.1],
 ] as const;
 
-const RINGS = [
-  { delay: 0, dur: 1.2, reach: 0.85, width: 1, alpha: 0.32 },
-  { delay: 0.06, dur: 1.5, reach: 0.5, width: 9, alpha: 0.04 },
-];
+/** The final light: 0 → 1, slow at first, then flooding the screen. */
+const swellAt = (t: number) => Math.pow(clamp((t - T.swell) / (T.white - T.swell)), 2.2);
 
 export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () => void {
   const ctx = canvas.getContext("2d");
@@ -331,7 +329,6 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
   });
 
   const wisps: Wisp[] = [];
-  const sparks: Spark[] = [];
   let dance: Dance | null = null;
   const pair: Point = { x: 0, y: 0 };
   let ripple = 0; // phase of the ripples running along the threads
@@ -352,7 +349,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
       ty = -ty;
     }
     const side = Math.sign(-dx * ty + dy * tx) || 1;
-    // Curve gently toward the middle, so the burst and the text land centrally.
+    // Curve gently toward the middle, so the climax and the text land centrally.
     const steer = clamp(angleDiff(Math.atan2(-c0.y, -c0.x), Math.atan2(ty, tx)), -0.6, 0.6);
     const turn = Math.hypot(c0.x, c0.y) > 0.1 ? steer * 0.8 + rand(-0.2, 0.2) : rand(-0.6, 0.6);
     const rot = (angle: number) => ({
@@ -520,67 +517,26 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
 
   // --- Particles -------------------------------------------------------------
 
-  let burstDone = false;
-  const spawnBurst = (M: Point, spin: number) => {
-    const n = Math.round(clamp((W * H) / 2600, 160, 520));
-    for (let i = 0; i < n; i++) {
-      const a = rand(0, TAU);
-      const sp = 0.08 + 1.3 * Math.pow(Math.random(), 3);
-      const roll = Math.random();
-      sparks.push({
-        x: M.x + Math.cos(a) * 0.004,
-        y: M.y + Math.sin(a) * 0.004,
-        // Mostly outward, with a little of the souls' spin carried into the dust.
-        vx: (Math.cos(a) - Math.sin(a) * 0.25 * spin) * sp,
-        vy: (Math.sin(a) + Math.cos(a) * 0.25 * spin) * sp,
-        born: T.burst,
-        life: rand(0.9, 1.95),
-        r: px(rand(0.6, 2)),
-        c: roll < 0.3 ? WARM : roll < 0.6 ? COOL : WHITE,
-        tw: rand(5, 13),
-        tp: rand(0, TAU),
-        glint: Math.random() < 0.06,
-      });
-    }
-  };
-
-  const ringRadius = (ring: (typeof RINGS)[number], t: number) =>
-    ring.reach * easeOutCubic(clamp((t - T.burst - ring.delay) / ring.dur));
-
   const update = (t: number, dt: number) => {
     const I = intensityAt(t);
-    const hush = smooth(T.merge, T.burst, t) * (t < T.burst ? 1 : 0);
+    const L = swellAt(t);
     const S = smooth(T.soul, T.soulFull, t);
     const P = dance ? clamp(1 - dance.R / dance.R0) : 0;
     // Ripples run faster as the drama builds, and flicker like flame once they're souls.
     ripple += TAU * (lerp(0.45, 1.3, P) + 1.5 * S) * dt;
 
-    if (dance && !burstDone && t >= T.burst) {
-      burstDone = true;
-      spawnBurst(dance.M, dance.spin);
-    }
-
-    // Dust: drifts, then is drawn into a slow swirl around the pair, then
-    // thrown outward by the burst's ring.
-    const r0 = dance && t >= T.burst ? ringRadius(RINGS[0], t) : 0;
-    const r0Before = dance && t - dt >= T.burst ? ringRadius(RINGS[0], t - dt) : 0;
+    // Dust: drifts, then is drawn into a slow swirl around the pair, and at
+    // the end is pulled into the light.
     for (const m of dust) {
-      if (dance && t < T.burst) {
-        const dx = pair.x - m.x, dy = pair.y - m.y;
+      if (dance) {
+        const c = t < T.merge ? pair : dance.M;
+        const dx = c.x - m.x, dy = c.y - m.y;
         const d = Math.hypot(dx, dy) + 0.08;
-        const pull = (0.07 * I * I) / d, swirl = (0.11 * I * I * dance.spin) / d;
+        const pull = (0.07 * I * I + 0.5 * L) / d, swirl = (0.11 * I * I * dance.spin) / d;
         m.vx += ((dx / d) * pull - (dy / d) * swirl) * dt;
         m.vy += ((dy / d) * pull + (dx / d) * swirl) * dt;
       }
-      if (dance && r0 > 0) {
-        const dx = m.x - dance.M.x, dy = m.y - dance.M.y, d = Math.hypot(dx, dy) || 1e-3;
-        if (d > r0Before && d <= r0) {
-          const push = 0.35 * (1 - r0 / RINGS[0].reach);
-          m.vx += (dx / d) * push;
-          m.vy += (dy / d) * push;
-        }
-      }
-      const damp = Math.exp(-dt * (0.9 + 5 * hush));
+      const damp = Math.exp(-dt * 0.9);
       m.vx *= damp;
       m.vy *= damp;
       m.x += m.vx * dt;
@@ -629,19 +585,6 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
       w.vy *= damp;
       w.x += w.vx * dt;
       w.y += w.vy * dt;
-    }
-
-    for (let i = sparks.length - 1; i >= 0; i--) {
-      const s = sparks[i];
-      if (t - s.born > s.life) {
-        sparks.splice(i, 1);
-        continue;
-      }
-      const drag = Math.exp(-dt * 2.6);
-      s.vx = s.vx * drag + rand(-1, 1) * 0.04 * dt;
-      s.vy = s.vy * drag + rand(-1, 1) * 0.04 * dt;
-      s.x += s.vx * dt;
-      s.y += s.vy * dt;
     }
 
     for (const th of threads) {
@@ -801,8 +744,9 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     ctx.globalAlpha = 1;
   };
 
-  const drawSouls = (S: number) => {
+  const drawSouls = (S: number, L: number) => {
     if (S <= 0) return;
+    const grow = 1 + 1.5 * L;
     for (const th of threads) {
       const h = th.head;
       const hb = beat(th.heart.ph);
@@ -812,8 +756,8 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
         const f = (i + 1) / (th.echoes.length + 1);
         drawSprite(th.sprite, e.x, e.y, (0.02 + 0.004 * i) * S, 0.24 * S * Math.pow(1 - f, 1.3));
       });
-      drawSprite(th.sprite, h.x, h.y, (0.065 + 0.02 * hb) * S * front, 0.2 * S);
-      drawSprite(th.sprite, h.x, h.y, (0.026 + 0.008 * hb) * S * front, 0.8 * S);
+      drawSprite(th.sprite, h.x, h.y, (0.065 + 0.02 * hb) * S * front * grow, 0.2 * S * grow);
+      drawSprite(th.sprite, h.x, h.y, (0.026 + 0.008 * hb) * S * front * grow, 0.8 * S);
       ctx.globalAlpha = S;
       ctx.fillStyle = rgba(th.tint, 1);
       ctx.beginPath();
@@ -823,109 +767,59 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     ctx.globalAlpha = 1;
   };
 
-  const drawMerged = (t: number, M: Point) => {
-    const a = smooth(T.merge - 0.04, T.merge + 0.03, t) * (1 - smooth(T.burst - 0.01, T.burst + 0.06, t));
+  const drawMerged = (t: number, M: Point, L: number) => {
+    const a = smooth(T.merge - 0.04, T.merge + 0.03, t);
     if (a <= 0) return;
-    const h = clamp((t - T.merge) / (T.burst - T.merge));
     const flare = Math.exp(-Math.max(0, t - T.merge) / 0.09);
-    // A breath in before the burst: the light gathers into a point.
     const white = sprites.get(WHITE)!;
-    drawSprite(white, M.x, M.y, lerp(0.13, 0.05, h * h * h) + 0.08 * flare, 0.5 * a);
-    drawSprite(white, M.x, M.y, lerp(0.045, 0.025, h), 0.9 * a);
+    drawSprite(white, M.x, M.y, 0.13 + 0.08 * flare + 0.35 * L, 0.5 * a);
+    drawSprite(white, M.x, M.y, 0.045 + 0.12 * L, 0.9 * a);
     ctx.globalAlpha = a;
     ctx.fillStyle = "#fff";
     ctx.beginPath();
-    ctx.arc(M.x, M.y, px(3.2) * lerp(1.3, 0.55, h * h), 0, TAU);
+    ctx.arc(M.x, M.y, px(3.2) * (1.3 + 3 * L), 0, TAU);
     ctx.fill();
-    ctx.globalAlpha = 1;
-  };
-
-  const drawBurst = (t: number, M: Point) => {
-    const age = t - T.burst;
-    const white = sprites.get(WHITE)!;
-    if (age < 0.6) {
-      drawSprite(white, M.x, M.y, lerp(0.04, 0.45, easeOutCubic(age / 0.6)), 0.55 * (1 - age / 0.6) ** 2);
-    }
-    ctx.strokeStyle = "#fff";
-    for (const ring of RINGS) {
-      const f = (age - ring.delay) / ring.dur;
-      if (f <= 0 || f >= 1) continue;
-      ctx.globalAlpha = ring.alpha * Math.pow(1 - f, 1.5);
-      ctx.lineWidth = px(ring.width) * (1 - 0.6 * f);
-      ctx.beginPath();
-      ctx.arc(M.x, M.y, ringRadius(ring, t), 0, TAU);
-      ctx.stroke();
-    }
-    ctx.lineCap = "round";
-    for (const c of [WARM, COOL, WHITE]) {
-      ctx.strokeStyle = rgba(c, 1);
-      for (const s of sparks) {
-        if (s.c !== c) continue;
-        const f = (t - s.born) / s.life;
-        if (f < 0 || f >= 1) continue;
-        const env = smooth(0, 0.04, f) * (1 - smooth(0.5, 1, f));
-        const tw = 0.6 + 0.4 * Math.sin(TAU * s.tw * t + s.tp);
-        const alpha = env * tw;
-        if (alpha < 0.01) continue;
-        ctx.globalAlpha = alpha;
-        ctx.lineWidth = s.r;
-        ctx.beginPath();
-        ctx.moveTo(s.x, s.y);
-        // Fast sparks streak a little; slow ones settle into points.
-        const speed = Math.hypot(s.vx, s.vy) || 1;
-        const tail = Math.min(speed * 0.015, px(7)) / speed;
-        ctx.lineTo(s.x - s.vx * tail - 0.0004, s.y - s.vy * tail);
-        ctx.stroke();
-        if (s.glint) {
-          const len = px(6) * alpha;
-          ctx.lineWidth = px(0.6);
-          ctx.beginPath();
-          ctx.moveTo(s.x - len, s.y);
-          ctx.lineTo(s.x + len, s.y);
-          ctx.moveTo(s.x, s.y - len);
-          ctx.lineTo(s.x, s.y + len);
-          ctx.stroke();
-        }
-      }
-    }
     ctx.globalAlpha = 1;
   };
 
   const render = (t: number) => {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.clearRect(0, 0, canvas.width, canvas.height);
+    // After the cut: pitch black, nothing at all.
+    if (t >= T.cut) return;
 
     const I = intensityAt(t);
     const S = smooth(T.soul, T.soulFull, t);
+    const L = swellAt(t);
     const P = dance ? clamp(1 - dance.R / dance.R0) : 0;
     const G = Math.max(P * 0.85, I);
-    const hush = smooth(T.merge, T.burst, t) * (t < T.burst ? 1 : 0);
 
-    // The view leans in slowly toward where they will meet.
+    // The view leans in slowly toward where they will meet, and on into the light.
     const k = DPR * U;
     ctx.setTransform(k, 0, 0, k, (DPR * W) / 2, (DPR * H) / 2);
     if (dance) {
-      const zoom = 1 + 0.07 * easeInOutCubic(I) + 0.03 * smooth(T.burst, T.end, t);
+      const zoom = 1 + 0.07 * easeInOutCubic(I) + 0.06 * L;
       ctx.translate(dance.M.x, dance.M.y);
       ctx.scale(zoom, zoom);
       ctx.translate(-dance.M.x, -dance.M.y);
     }
     ctx.globalCompositeOperation = "lighter";
 
+    // Their joined heartbeat.
+    const hb = (beat(threads[0].heart.ph) + beat(threads[1].heart.ph)) / 2;
+    const centre = dance && t >= T.merge ? dance.M : pair;
+
     // A soft light gathers around the pair, breathing with their hearts.
     if (dance) {
-      const hb = (beat(threads[0].heart.ph) + beat(threads[1].heart.ph)) / 2;
-      const c = t < T.merge ? pair : dance.M;
-      const r = 0.5 + 0.25 * I;
-      drawSprite(fog, c.x, c.y, r, (0.05 * I + 0.03 * I * hb) * (1 - smooth(T.burst, T.burst + 1.2, t)) * (1 - 0.4 * hush));
+      drawSprite(fog, centre.x, centre.y, 0.5 + 0.25 * I, (0.05 * I + 0.03 * I * hb) * (1 - L));
     }
 
     // Dust.
-    const dustFade = smooth(0, 0.9, t) * (1 - smooth(T.burst + 0.4, T.end - 0.3, t));
+    const dustFade = smooth(0, 0.9, t);
     ctx.fillStyle = "#fff";
     for (const m of dust) {
-      const near = Math.exp(-((m.x - pair.x) ** 2 + (m.y - pair.y) ** 2) / 0.05);
-      const alpha = (0.08 + 0.3 * I) * m.d * (0.55 + 0.45 * Math.sin(TAU * m.tw * t + m.tp)) * (1 + 1.5 * I * near) * dustFade;
+      const near = Math.exp(-((m.x - centre.x) ** 2 + (m.y - centre.y) ** 2) / 0.05);
+      const alpha = (0.08 + 0.3 * I + 0.4 * L) * m.d * (0.55 + 0.45 * Math.sin(TAU * m.tw * t + m.tp)) * (1 + 1.5 * I * near) * dustFade;
       if (alpha < 0.004) continue;
       ctx.globalAlpha = Math.min(1, alpha);
       ctx.beginPath();
@@ -940,20 +834,19 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
 
     if (t < T.merge + 0.02) {
       drawThreads(t, P, G, S, I);
-      drawSouls(S);
+      drawSouls(S, L);
     }
-    if (dance && t >= T.merge - 0.04 && t < T.burst + 0.1) drawMerged(t, dance.M);
-    if (dance && t >= T.burst) drawBurst(t, dance.M);
+    if (dance && t >= T.merge - 0.04) drawMerged(t, dance.M, L);
 
-    // A faint flash as it bursts.
-    if (t >= T.burst) {
-      const flash = 0.07 * Math.exp(-(t - T.burst) / 0.12);
-      if (flash > 0.003) {
-        ctx.setTransform(1, 0, 0, 1, 0, 0);
-        ctx.globalAlpha = flash;
-        ctx.fillStyle = "#fff";
-        ctx.fillRect(0, 0, canvas.width, canvas.height);
-      }
+    // The light pours out of them, brighter and brighter, pulsing faintly with
+    // their heartbeat, until the screen is white.
+    if (L > 0) {
+      const pulse = t < T.white ? 1 + 0.06 * hb : 1;
+      drawSprite(fog, centre.x, centre.y, lerp(0.2, 2.6, Math.pow(L, 0.55)), Math.min(1, (0.12 + 1.2 * L) * pulse));
+      ctx.setTransform(1, 0, 0, 1, 0, 0);
+      ctx.globalAlpha = Math.min(1, Math.pow(L, 1.7) * pulse);
+      ctx.fillStyle = "#fff";
+      ctx.fillRect(0, 0, canvas.width, canvas.height);
     }
     ctx.globalAlpha = 1;
     ctx.globalCompositeOperation = "source-over";
@@ -985,7 +878,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
 
   // A tap, click or key press skips ahead.
   const skip = () => {
-    if (skipAt < 0 && t < T.fadeStart) {
+    if (skipAt < 0) {
       skipAt = performance.now();
       reveal();
     }
@@ -1004,12 +897,10 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
       }
       update(t, dt);
       render(t);
-      if (t >= T.reveal) reveal();
 
-      let opacity = 1 - smooth(T.fadeStart, T.end, t);
-      if (skipAt >= 0) opacity = Math.min(opacity, 1 - (now - skipAt) / 350);
+      const opacity = skipAt >= 0 ? 1 - (now - skipAt) / 350 : 1;
       canvas.style.opacity = String(Math.max(0, opacity));
-      if (t >= T.end || opacity <= 0) {
+      if (t >= T.reveal || opacity <= 0) {
         finish();
         return;
       }
