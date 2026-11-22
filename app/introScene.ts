@@ -45,14 +45,16 @@ const T = {
   turn: 1.4, // how long turning toward each other takes
   pass: 12.2, // they pass each other, close enough almost to touch...
   touch: 14.2, // ...one turns back and comes alongside the other (about then)
-  soul: 18.0, // their tips bloom into souls
-  soulFull: 19.0,
-  plunge: 20.0, // the final spiral in
-  merge: 20.8, // the two become one; a calm moment
-  swell: 21.4, // their light floods out...
-  white: 22.8, // ...until the screen is white, and stays
-  cut: 24.2, // then, all of a sudden, pitch black
-  reveal: 25.2, // the text emerges, very slowly, from the dark
+  soul: 16.8, // while they still weave, a light begins to gather at their tips...
+  soulFull: 19.4, // ...until they are two souls
+  shrink: 17.6, // their threads slowly draw in behind them
+  settle: 18.4, // they slow, and little by little begin to circle each other
+  plunge: 20.3, // the final spiral in
+  merge: 21.0, // the two become one; a calm moment
+  swell: 21.6, // their light floods out...
+  white: 23.0, // ...until the screen is white, and stays
+  cut: 24.4, // then, all of a sudden, pitch black
+  reveal: 25.4, // the text emerges, very slowly, from the dark
 } as const;
 
 // Barely-there tints: one soul a touch warm, the other a touch cool.
@@ -442,7 +444,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
   /** Moves the point they weave around, and where each tip is drawn to. */
   const danceStep = (d: Dance, t: number, dt: number) => {
     const since = t - d.start;
-    const settle = smooth(T.soul, T.plunge - 0.2, t); // as souls, they drift to a stop
+    const settle = smooth(T.settle, T.plunge - 0.2, t); // slowing to a stop
 
     // Travelling on together, unhurried, on a gently wandering path that
     // curves back toward the middle when it strays (never turning tighter
@@ -457,18 +459,18 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
 
     // Weaving loosely across each other, the gap breathing in and out; as
     // souls a little further apart, circling; then the plunge.
-    let Rb = lerp(lerp(d.R0, 0.028, smooth(0, 1.2, since)), 0.045, smooth(T.soul - 0.5, T.soulFull, t));
+    let Rb = lerp(lerp(d.R0, 0.028, smooth(0, 1.2, since)), 0.045, smooth(T.settle - 0.4, T.plunge, t));
     if (t > T.plunge) Rb *= 1 - Math.pow(clamp((t - T.plunge) / (T.merge - T.plunge)), 1.6);
     d.R = Rb * (1 + 0.2 * d.breath(t) * (1 - settle));
 
     // How fast they weave: unhurried and uneven; quicker as souls.
-    let turns = (0.25 + 0.06 * d.twist(t)) * smooth(0, 1, since) + 0.7 * smooth(T.soul, T.plunge, t);
+    let turns = (0.25 + 0.06 * d.twist(t)) * smooth(0, 1, since) + 0.7 * smooth(T.settle, T.plunge + 0.2, t);
     if (t > T.plunge) turns *= Math.min(3, Math.pow(0.045 / Math.max(Rb, 0.008), 0.6));
     d.phi += d.spin * TAU * turns * dt;
 
     // Seen nearly side on while they travel (so they cross back and forth),
     // face on as souls (so they circle).
-    d.beta = lerp(clamp(0.16 + 0.08 * d.tilt(t), 0.06, 0.26), 0.88, smooth(T.soul - 0.4, T.plunge, t));
+    d.beta = lerp(clamp(0.16 + 0.08 * d.tilt(t), 0.06, 0.26), 0.88, smooth(T.settle, T.plunge, t));
 
     placeTargets(d, t);
   };
@@ -520,7 +522,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
 
   /** While they dance: chase the moving target, matching its speed. */
   const desireDance = (th: Thread, t: number, dt: number) => {
-    const kp = lerp(6, 30, smooth(T.soul, T.plunge, t));
+    const kp = lerp(6, 30, smooth(T.plunge - 0.5, T.plunge + 0.2, t));
     let fx = (th.target.x - th.prevTarget.x) / dt, fy = (th.target.y - th.prevTarget.y) / dt;
     const fs = Math.hypot(fx, fy);
     if (fs > 0.8) {
@@ -646,7 +648,6 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     const slotX = b.rope.x[0] - hby * joinSide * 0.045 - hbx * 0.02;
     const slotY = b.rope.y[0] + hbx * joinSide * 0.045 - hby * 0.02;
 
-    const S = smooth(T.soul, T.soulFull, t);
     const absorb = 1 - smooth(T.merge - 0.3, T.merge, t); // tails are drawn into the souls
     for (const th of threads) {
       if (M) {
@@ -654,7 +655,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
         th.rope.y[0] = M.y;
       } else if (dance) {
         const want = desireDance(th, t, dt);
-        const tight = smooth(T.soul, T.plunge + 0.3, t);
+        const tight = smooth(T.plunge - 0.5, T.plunge + 0.3, t);
         const ease = smooth(dance.start, dance.start + 1.5, t);
         swimTip(th, Math.atan2(want.vy, want.vx), Math.min(1.2, Math.hypot(want.vx, want.vy)), 0.3 * (1 - tight), lerp(lerp(25, 80, ease), 300, tight), lerp(10, 20, tight), t, dt);
       } else {
@@ -689,7 +690,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
         }
         swimTip(th, Math.atan2(vy, vx), Math.min(1.2, Math.hypot(vx, vy)), lerp(1, 0.35, drawn), 20, lerp(2.5, 5, drawn), t, dt);
       }
-      const seg = Math.max(1e-4, (th.L * (1 - 0.72 * S) * absorb) / (ROPE - 1));
+      const seg = Math.max(1e-4, (th.L * (1 - 0.6 * smooth(T.shrink, T.plunge, t)) * absorb) / (ROPE - 1));
       ropeStep(th, seg, t, dt);
     }
 
@@ -762,7 +763,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
     // Souls shed soft wisps and leave fading afterimages (their shadows).
     if (S > 0.02 && t < T.merge) {
       for (const th of threads) {
-        th.wispDebt += 50 * S * dt;
+        th.wispDebt += 50 * S * S * dt;
         while (th.wispDebt >= 1) {
           th.wispDebt -= 1;
           wisps.push({
@@ -862,7 +863,8 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
   };
 
   const drawThreads = (t: number, P: number, G: number, S: number, I: number) => {
-    const core = px(lerp(0.9, 3, Math.pow(P, 1.3)) * (1 + 0.5 * S));
+    const drawIn = smooth(T.shrink, T.plunge, t); // thicker toward the tip as they draw in
+    const core = px(lerp(0.9, 3, Math.pow(P, 1.3)) * (1 + 0.5 * drawIn));
     const gap = px(1.6);
     const amp = 0.005 * (1 - P) * (1 - S) + 0.003 * S;
     const beatAmp = 0.12 + 0.5 * I;
@@ -885,7 +887,7 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
         // Tapered at both ends while floating; heavier at the tip once it's a soul.
         const both = Math.pow(Math.sin(Math.PI * (0.02 + 0.96 * f)), 0.6);
         const comet = Math.pow(1 - f, 1.3) * Math.min(1, 0.45 + f * 10);
-        const prof = lerp(both, comet, S);
+        const prof = lerp(both, comet, drawIn);
         const z = buf.z[i];
         buf.w[i] = core * prof * (1 + 0.35 * z);
         // Where this thread passes in front, a thin dark edge hides the one
@@ -948,6 +950,8 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
   const drawSouls = (S: number, L: number) => {
     if (S <= 0) return;
     const grow = 1 + 1.5 * L;
+    const glow = Math.pow(S, 1.5); // the light gathers slowly at first
+    const core = S * S; // the bright heart of it comes last
     for (const th of threads) {
       const hx = th.rope.x[0], hy = th.rope.y[0];
       const hb = beat(th.heart.ph);
@@ -955,11 +959,11 @@ export function startIntro(canvas: HTMLCanvasElement, cb: IntroCallbacks): () =>
       // Their shadows: fading afterimages trailing behind.
       th.echoes.forEach((e, i) => {
         const f = (i + 1) / (th.echoes.length + 1);
-        drawSprite(th.sprite, e.x, e.y, (0.02 + 0.004 * i) * S, 0.24 * S * Math.pow(1 - f, 1.3));
+        drawSprite(th.sprite, e.x, e.y, (0.02 + 0.004 * i) * (0.4 + 0.6 * S), 0.24 * core * Math.pow(1 - f, 1.3));
       });
-      drawSprite(th.sprite, hx, hy, (0.065 + 0.02 * hb) * S * front * grow, 0.2 * S * grow);
-      drawSprite(th.sprite, hx, hy, (0.026 + 0.008 * hb) * S * front * grow, 0.8 * S);
-      ctx.globalAlpha = S;
+      drawSprite(th.sprite, hx, hy, (0.065 + 0.02 * hb) * (0.35 + 0.65 * S) * front * grow, 0.2 * glow * grow);
+      drawSprite(th.sprite, hx, hy, (0.026 + 0.008 * hb) * (0.4 + 0.6 * S) * front * grow, 0.8 * glow);
+      ctx.globalAlpha = core;
       ctx.fillStyle = rgba(th.tint, 1);
       ctx.beginPath();
       ctx.arc(hx, hy, px(2.8) * (0.5 + 0.5 * S) * front, 0, TAU);
