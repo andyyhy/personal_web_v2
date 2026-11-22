@@ -20,21 +20,28 @@ body {
     0 0 0.3em color-mix(in srgb, currentColor 55%, transparent),
     0 0 1.1em color-mix(in srgb, currentColor 22%, transparent);
   transition: color 450ms ease;
-  animation: bouncing-text-in 900ms ease-out both;
 }
 
-@keyframes bouncing-text-in {
-  from {
-    opacity: 0;
-  }
-  to {
-    opacity: 1;
-  }
+/* When the intro hands over, the text emerges slowly from the dark: a faint,
+   blurred glow at first that gradually comes into focus. */
+.bouncing-text-inner {
+  display: inline-block;
+  transition:
+    opacity 3.4s cubic-bezier(0.55, 0, 0.35, 1),
+    filter 4.2s cubic-bezier(0.35, 0.1, 0.3, 1),
+    scale 4.6s cubic-bezier(0.2, 0.6, 0.2, 1);
+}
+
+.bouncing-text[data-waiting] .bouncing-text-inner {
+  opacity: 0;
+  filter: blur(16px);
+  scale: 0.93;
+  transition: none;
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .bouncing-text {
+  .bouncing-text,
+  .bouncing-text-inner {
     transition: none;
-    animation: none;
   }
 }

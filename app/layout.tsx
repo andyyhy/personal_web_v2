@@ -31,6 +31,14 @@ export default function RootLayout({
           crossOrigin="anonymous"
         />
         <link rel="stylesheet" href={FONT_URL} />
+        {/* Without JavaScript there's no intro, so show the text straight away. */}
+        <noscript>
+          <style>
+            {
+              ".bouncing-text[data-waiting] .bouncing-text-inner{opacity:1;filter:none;scale:1}"
+            }
+          </style>
+        </noscript>
       </head>
       <body className="antialiased">
         {children}
